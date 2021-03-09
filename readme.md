@@ -12,5 +12,6 @@ add any folder for example "users"
 add 1.json file with some json data
 now this data is avaible 
 
+
 http://localhost:3000/users/1
 
