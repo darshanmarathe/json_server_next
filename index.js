@@ -49,8 +49,9 @@ app.put("/:type/:id", async (req, res) => {
 });
 
 app.delete("/:type/:id", async (req, res) => {
-  let item = await readfileContent(req.params);
-  res.send(item);
+  let { type, id } = req.params;
+  deleteFile(type, id);
+  res.send("Deleted.");
 });
 
 function createFile(type, body, id) {
@@ -78,6 +79,9 @@ function updateFile(type, body, id) {
   });
 }
 
+function deleteFile(type, id) {
+  fs.unlinkSync(`./data/${type}/${id}.json`);
+}
 function readFolderContent({ type }) {
   let result = [];
   return new Promise((res, rej) => {
