@@ -39,7 +39,7 @@ app.post("/:type/", async (req, res) => {
 
 app.put("/:type/:id", async (req, res) => {
   let { type, id } = req.params;
-  let item = req.body;
+  if (req.body.id) delete req.body.id;
   try {
     let obj = await updateFile(type, req.body, id);
     res.send(obj);
