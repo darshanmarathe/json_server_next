@@ -56,6 +56,7 @@ app.delete("/:type/:id", async (req, res) => {
 
 function createFile(type, body, id) {
   body.id = id;
+  body._createdOn = new Date();
   return new Promise((res, rej) => {
     CreatefolderIfNotExist(type);
     if (fs.existsSync(`./data/${type}/${id}.json`)) {
@@ -67,6 +68,7 @@ function createFile(type, body, id) {
 }
 
 function updateFile(type, body, id) {
+  body._updatedOn = new Date();
   return new Promise(async (res, rej) => {
     if (fs.existsSync(`./data/${type}/${id}.json`)) {
       const file = await readfileContent({ type, id });
