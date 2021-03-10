@@ -57,6 +57,7 @@ app.delete("/:type/:id", async (req, res) => {
 function createFile(type, body, id) {
   body.id = id;
   return new Promise((res, rej) => {
+    CreatefolderIfNotExist(type);
     if (fs.existsSync(`./data/${type}/${id}.json`)) {
       rej(new Error("record already exist."));
     }
@@ -95,6 +96,13 @@ function readFolderContent({ type }) {
     }
     res(result);
   });
+}
+
+function CreatefolderIfNotExist(type) {
+  console.log(`./data/${type}`);
+  if (!fs.existsSync(`./data/${type}`)) {
+    fs.mkdirSync(`./data/${type}`);
+  }
 }
 
 function readfileContent({ type, id }) {
