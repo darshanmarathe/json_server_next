@@ -14,11 +14,19 @@ now this data is avaible
 
 Get All
 http://localhost:3000/users/
+
+
 Get By id
 http://localhost:3000/users/1
+
+
 Post
 http://localhost:3000/users/ // body as json
+
+
 Put
 http://localhost:3000/users/1 // body as json
+
+
 Delete
 http://localhost:3000/users/1
