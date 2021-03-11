@@ -26,10 +26,12 @@ app.get("/:type/:id", async (req, res) => {
 app.post("/:type/", async (req, res) => {
   let { type } = req.params;
   let item = req.body;
+
+  console.log(item)
   const has_id = "id" in item;
   let id = has_id ? item.id : UUID();
   try {
-    await createFile(type, req.body, id);
+    await createFile(type, item, id);
     item.id = id;
     res.send(item);
   } catch (error) {
@@ -57,6 +59,7 @@ app.delete("/:type/:id", async (req, res) => {
 function createFile(type, body, id) {
   body.id = id;
   body._createdOn = new Date();
+console.log(body)
   return new Promise((res, rej) => {
     CreatefolderIfNotExist(type);
     if (fs.existsSync(`./data/${type}/${id}.json`)) {
