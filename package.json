@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index",
+    "watch": "nodemon --ignore 'data/*.json' index"
   },
   "keywords": [],
   "author": "",

@@ -9,9 +9,10 @@ const port = 3000;
 app.use(cors());
 app.use(
   bodyParser.json({
-    strict: true,
+    strict: false,
   })
 );
+
 
 app.get("/:type/", async (req, res) => {
   let item = await readFolderContent(req.params);
@@ -26,6 +27,7 @@ app.get("/:type/:id", async (req, res) => {
 app.post("/:type/", async (req, res) => {
   let { type } = req.params;
   let item = req.body;
+  console.log(item , "item")
   const has_id = "id" in item;
   let id = has_id ? item.id : UUID();
   try {
@@ -89,11 +91,9 @@ function readFolderContent({ type }) {
   let result = [];
   return new Promise((res, rej) => {
     let files = fs.readdirSync(`./data/${type}/`);
-    console.log(files);
     for (const file of files) {
       let data = fs.readFileSync(`./data/${type}/${file}`);
       let record_data = JSON.parse(data);
-      console.log(record_data);
       result.push(record_data);
     }
     res(result);
