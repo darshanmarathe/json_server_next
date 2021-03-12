@@ -30,3 +30,15 @@ http://localhost:3000/users/1 // body as json
 
 Delete
 http://localhost:3000/users/1
+
+
+
+##Roadmap 
+
+Add support for 
+validations
+transformations 
+Webhook 
+
+May Be
+GraphQL

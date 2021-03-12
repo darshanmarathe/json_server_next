@@ -4,15 +4,29 @@ const fs = require("fs");
 const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
+const { resolve } = require("path");
+
+var methodOverride = require('method-override')
+
+
+function errorHandler (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.sendStatus(500)
+ }
+
 const app = express();
 const port = 3000;
 app.use(cors());
 app.use(
   bodyParser.json({
-    strict: true,
+    strict: false,
   })
 );
 
+app.use(methodOverride())
+app.use(errorHandler)
 app.get("/:type/", async (req, res) => {
   let item = await readFolderContent(req.params);
   res.send(item);
@@ -20,14 +34,16 @@ app.get("/:type/", async (req, res) => {
 
 app.get("/:type/:id", async (req, res) => {
   let item = await readfileContent(req.params);
-  res.send(item);
+  if(typeof item === 'object')
+    res.send(item);
+  else
+    res.sendStatus(item);
 });
 
 app.post("/:type/", async (req, res) => {
   let { type } = req.params;
   let item = req.body;
-
-  console.log(item)
+  console.log(item , "item")
   const has_id = "id" in item;
   let id = has_id ? item.id : UUID();
   try {
@@ -90,13 +106,12 @@ function deleteFile(type, id) {
 }
 function readFolderContent({ type }) {
   let result = [];
+  CreatefolderIfNotExist(type)
   return new Promise((res, rej) => {
     let files = fs.readdirSync(`./data/${type}/`);
-    console.log(files);
     for (const file of files) {
       let data = fs.readFileSync(`./data/${type}/${file}`);
       let record_data = JSON.parse(data);
-      console.log(record_data);
       result.push(record_data);
     }
     res(result);
@@ -112,11 +127,15 @@ function CreatefolderIfNotExist(type) {
 
 function readfileContent({ type, id }) {
   return new Promise((res, rej) => {
-    fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
-      if (err) rej(err);
-      let record_data = JSON.parse(data);
-      res(record_data);
-    });
+    if(fs.existsSync(`./data/${type}/${id}.json`)){
+      fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
+        if (err) rej(err);
+        let record_data = JSON.parse(data);
+        res(record_data);
+      });
+    }else{
+      return res(404)
+    }
   });
 }
 
