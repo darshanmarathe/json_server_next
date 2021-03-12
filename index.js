@@ -4,6 +4,7 @@ const fs = require("fs");
 const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
+const { resolve } = require("path");
 const app = express();
 const port = 3000;
 app.use(cors());
@@ -21,7 +22,10 @@ app.get("/:type/", async (req, res) => {
 
 app.get("/:type/:id", async (req, res) => {
   let item = await readfileContent(req.params);
-  res.send(item);
+  if(typeof item === 'object')
+    res.send(item);
+  else
+    res.sendStatus(item);
 });
 
 app.post("/:type/", async (req, res) => {
@@ -89,6 +93,7 @@ function deleteFile(type, id) {
 }
 function readFolderContent({ type }) {
   let result = [];
+  CreatefolderIfNotExist(type)
   return new Promise((res, rej) => {
     let files = fs.readdirSync(`./data/${type}/`);
     for (const file of files) {
@@ -109,11 +114,15 @@ function CreatefolderIfNotExist(type) {
 
 function readfileContent({ type, id }) {
   return new Promise((res, rej) => {
-    fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
-      if (err) rej(err);
-      let record_data = JSON.parse(data);
-      res(record_data);
-    });
+    if(fs.existsSync(`./data/${type}/${id}.json`)){
+      fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
+        if (err) rej(err);
+        let record_data = JSON.parse(data);
+        res(record_data);
+      });
+    }else{
+      return res(404)
+    }
   });
 }
 
