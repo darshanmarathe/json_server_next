@@ -5,6 +5,17 @@ const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
 const { resolve } = require("path");
+
+var methodOverride = require('method-override')
+
+
+function errorHandler (err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.sendStatus(500)
+ }
+
 const app = express();
 const port = 3000;
 app.use(cors());
@@ -14,7 +25,8 @@ app.use(
   })
 );
 
-
+app.use(methodOverride())
+app.use(errorHandler)
 app.get("/:type/", async (req, res) => {
   let item = await readFolderContent(req.params);
   res.send(item);
