@@ -1,5 +1,7 @@
 const validPost =async  (obj) => {
-
+    let errors = [];
+    if(!obj.title) errors.push("title is required");
+    return (errors.length === 0) ? true : errors;
 }
 
 const validPut =async  (obj) => {
@@ -16,7 +18,7 @@ const WebHooks = {
     DELTE : "http://localhost:4000/post"
 }
 
-module.export = {
+module.exports = {
     validPut,
     validDelete,
     validPost,

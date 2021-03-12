@@ -4,7 +4,6 @@ const fs = require("fs");
 const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
-const { resolve } = require("path");
 
 var methodOverride = require('method-override')
 
@@ -42,6 +41,7 @@ app.get("/:type/:id", async (req, res) => {
 
 app.post("/:type/", async (req, res) => {
   let { type } = req.params;
+  const logic  = LoadLogic(type);
   let item = req.body;
   console.log(item , "item")
   const has_id = "id" in item;
@@ -75,7 +75,6 @@ app.delete("/:type/:id", async (req, res) => {
 function createFile(type, body, id) {
   body.id = id;
   body._createdOn = new Date();
-console.log(body)
   return new Promise((res, rej) => {
     CreatefolderIfNotExist(type);
     if (fs.existsSync(`./data/${type}/${id}.json`)) {
@@ -139,6 +138,19 @@ function readfileContent({ type, id }) {
   });
 }
 
+function LoadLogic(type) {
+  let logic = null;
+  try {
+    logic = require("./logic/" + type)
+    console.log("loaded logic for " + type);
+
+  } catch (error) {
+    logic = require("./logic/__base")
+    console.log("loaded base logic");
+  }
+
+  return logic;
+}
 function UUID() {
   var dt = new Date().getTime();
   var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
