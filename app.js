@@ -4,20 +4,20 @@ const fs = require("fs");
 const express = require("express");
 var cors = require("cors");
 const bodyParser = require("body-parser");
-const { resolve } = require("path");
+const _ = require("lodash")
 
 var methodOverride = require('method-override')
 
 
-function errorHandler (err, req, res, next) {
+function errorHandler(err, req, res, next) {
   if (res.headersSent) {
     return next(err)
   }
   res.sendStatus(500)
- }
+}
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(
   bodyParser.json({
@@ -27,14 +27,36 @@ app.use(
 
 app.use(methodOverride())
 app.use(errorHandler)
-app.get("/:type/", async (req, res) => {
-  let item = await readFolderContent(req.params);
-  res.send(item);
+
+app.get("/" , async (req, res) => {
+  let listOfFolders = [];
+  const dir = './data/'
+  const files = fs.readdirSync(dir)
+
+  for (const file of files) {
+    if(file.indexOf('.') === -1)
+       listOfFolders.push(file)
+    console.log(file);
+  }
+  let html =`
+    <h1> Routes already there</h1>
+  <ul>
+    ${listOfFolders.map(x => `<li>/${x}</li>`)}
+  </ul>
+    ` 
+  res.send(html)
 });
+
+app.get("/:type/", async (req, res) => {
+  let items = await readFolderContent(req.params);
+  items = getPaginatedItems(items, req.query)
+  res.send(items);
+});
+
 
 app.get("/:type/:id", async (req, res) => {
   let item = await readfileContent(req.params);
-  if(typeof item === 'object')
+  if (typeof item === 'object')
     res.send(item);
   else
     res.sendStatus(item);
@@ -43,7 +65,7 @@ app.get("/:type/:id", async (req, res) => {
 app.post("/:type/", async (req, res) => {
   let { type } = req.params;
   let item = req.body;
-  console.log(item , "item")
+  console.log(item, "item")
   const has_id = "id" in item;
   let id = has_id ? item.id : UUID();
   try {
@@ -58,6 +80,7 @@ app.post("/:type/", async (req, res) => {
 app.put("/:type/:id", async (req, res) => {
   let { type, id } = req.params;
   if (req.body.id) delete req.body.id;
+  console.log(req.body)
   try {
     let obj = await updateFile(type, req.body, id);
     res.send(obj);
@@ -110,8 +133,12 @@ function readFolderContent({ type }) {
     let files = fs.readdirSync(`./data/${type}/`);
     for (const file of files) {
       let data = fs.readFileSync(`./data/${type}/${file}`);
-      let record_data = JSON.parse(data);
-      result.push(record_data);
+      try {
+        let record_data = JSON.parse(data);
+        result.push(record_data);
+      } catch {
+
+      }
     }
     res(result);
   });
@@ -126,16 +153,24 @@ function CreatefolderIfNotExist(type) {
 
 function readfileContent({ type, id }) {
   return new Promise((res, rej) => {
-    if(fs.existsSync(`./data/${type}/${id}.json`)){
+    if (fs.existsSync(`./data/${type}/${id}.json`)) {
       fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
         if (err) rej(err);
         let record_data = JSON.parse(data);
         res(record_data);
       });
-    }else{
+    } else {
       return res(404)
     }
   });
+}
+
+function getPaginatedItems(items, { _page, _pageSize }) {
+  var pg = _page || 1,
+    pgSize = _pageSize || items.length,
+    offset = (pg - 1) * pgSize,
+    pagedItems = _.drop(items, offset).slice(0, pgSize);
+  return pagedItems;
 }
 
 function UUID() {

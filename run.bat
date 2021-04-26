@@ -1,1 +1,3 @@
-nodemon index.js
+cls
+@echo starting server......
+npm run watch

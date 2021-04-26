@@ -2,10 +2,10 @@
   "name": "minServ",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index",
-    "watch": "nodemon --ignore 'data/*.json' index"
+    "start": "node app",
+    "watch": "nodemon --ignore 'data/*.json' app"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,7 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "lodash": "^4.17.21",
     "method-override": "^3.0.0"
   }
 }

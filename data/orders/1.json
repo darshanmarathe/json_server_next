@@ -1,6 +1,284 @@
 {
-  "id" : 1,
-  "name" : "Darshan Marathe",
-  "items" : [],
-  "showItems" : true
+  "code": 6591002391,
+  "purchaseOrderNumber": "April 03, 2020",
+  "stringDate": "April 03, 2020",
+  "totalPriceWithTax": {
+    "currencyIso": "USD",
+    "value": 36.26,
+    "priceType": "BUY",
+    "formattedValue": "$36.26",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "status": {
+    "code": "PARTIALLY_INVOICED",
+    "type": "OrderStatus"
+  },
+  "b2bCustomerData": {
+    "uid": "john.smith@philips.com",
+    "name": "John Smith"
+  },
+  "paymentType": {
+    "code": "ACCOUNT",
+    "displayName": "Account Payment"
+  },
+  "subTotal": {
+    "currencyIso": "USD",
+    "value": 33.5,
+    "priceType": "BUY",
+    "formattedValue": "$33.50",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "subTotalWithDiscounts": null,
+  "subTotalWithoutQuoteDiscounts": {
+    "currencyIso": "USD",
+    "value": 33.5,
+    "priceType": "BUY",
+    "formattedValue": "$33.50",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "totalDiscounts": {
+    "currencyIso": "USD",
+    "value": 16.5,
+    "priceType": "BUY",
+    "formattedValue": "$16.50",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "totalDiscountsWithQuoteDiscounts": {
+    "currencyIso": "USD",
+    "value": 16.5,
+    "priceType": "BUY",
+    "formattedValue": "$16.50",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "totalPrice": {
+    "currencyIso": "USD",
+    "value": 36.26,
+    "priceType": "BUY",
+    "formattedValue": "$36.26",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "totalPromotionDiscount": {
+    "currencyIso": "USD",
+    "value": 0,
+    "priceType": "BUY",
+    "formattedValue": "$0.00",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "totalTax": {
+    "currencyIso": "USD",
+    "value": 2.76,
+    "priceType": "BUY",
+    "formattedValue": "$2.76",
+    "minQuantity": null,
+    "maxQuantity": null
+  },
+  "EntriesPerSalesOrg": [
+    {
+      "salesOrgName": "hospital and healthcare products",
+      "orderCode": 782648127401,
+      "contactName": "Ralph Bruinini",
+      "contactPhone": 656332323,
+      "deliveryMode": {
+        "code": "02",
+        "name": "Standard Delivery"
+      },
+      "payerAddress": {
+        "id": "8852850114583",
+        "addressDescription": "Payer",
+        "addressType": "PayTo",
+        "title": null,
+        "titleCode": null,
+        "firstName": null,
+        "lastName": null,
+        "companyName": "Brownwood Regional Medical Center",
+        "country": {
+          "isocode": "US",
+          "name": "United States",
+          "postalCodeRegEx": null
+        },
+        "formattedAddress": "Texas, BROWNWOOD, 76804-0760",
+        "region": {
+          "isocode": "US-TX",
+          "isocodeShort": "TX",
+          "countryIso": "US",
+          "name": "Texas"
+        },
+        "poBox": 760,
+        "postalCode": "76804-0760",
+        "town": "BROWNWOOD",
+        "visibleInAddressBook": true
+      },
+      "billingAddress": {
+        "id": "8852850114583",
+        "addressDescription": "Billing",
+        "addressType": "BillTo",
+        "title": null,
+        "titleCode": null,
+        "firstName": null,
+        "lastName": null,
+        "companyName": "Brownwood Regional Medical Center",
+        "country": {
+          "isocode": "US",
+          "name": "United States",
+          "postalCodeRegEx": null
+        },
+        "formattedAddress": "Texas, BROWNWOOD, 76804-0760",
+        "region": {
+          "isocode": "US-TX",
+          "isocodeShort": "TX",
+          "countryIso": "US",
+          "name": "Texas"
+        },
+        "poBox": 760,
+        "postalCode": "76804-0760",
+        "town": "BROWNWOOD",
+        "visibleInAddressBook": true
+      },
+      "shippingAddress": {
+        "id": "8852850114583",
+        "addressDescription": "Shipping",
+        "addressType": "ShipTo",
+        "title": null,
+        "titleCode": null,
+        "firstName": null,
+        "lastName": null,
+        "companyName": "Brownwood Regional Medical Center",
+        "country": {
+          "isocode": "US",
+          "name": "United States",
+          "postalCodeRegEx": null
+        },
+        "formattedAddress": "Texas, BROWNWOOD, 76804-0760",
+        "region": {
+          "isocode": "US-TX",
+          "isocodeShort": "TX",
+          "countryIso": "US",
+          "name": "Texas"
+        },
+        "poBox": 760,
+        "postalCode": "76804-0760",
+        "town": "BROWNWOOD",
+        "visibleInAddressBook": true
+      },
+      "ship-to-number": "6530416009",
+      "invoiceDetails": [
+        {
+          "confirmationNumber": "653041600",
+          "deliveryNumber": "0183707473",
+          "salesOrderItemNumber": null,
+          "invoiceNumber": "0945158139",
+          "carrierCode": "FEDERAL EXPRESS CORPORATION",
+          "carrierName": "FEDERAL EXPRESS CORPORATION ATTN: KATHY DAWSON",
+          "trackingURL": "HTTP://WWW.FEDEX.COM/FEDEXTRACK/INDEX.HTML?TRACKNUMBERS=089199711403815",
+          "estDelDate": "03/05/2021",
+          "useInvoicePDF": true,
+          "usePCMSInvoicePDF": null,
+          "useRmdPDF": true,
+          "entries": [
+            {
+              "availability": "X",
+              "basePrice": {
+                "currencyIso": "USD",
+                "value": 600,
+                "priceType": "BUY",
+                "formattedValue": "$600.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "contractDiscountPrice": {
+                "currencyIso": "USD",
+                "value": 438,
+                "priceType": "BUY",
+                "formattedValue": "$438.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "entryDiscount": {
+                "currencyIso": "USD",
+                "value": 162,
+                "priceType": "BUY",
+                "formattedValue": "$162.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "entryNumber": 0,
+              "isBackordered": false,
+              "isDeadArticle": false,
+              "isLumifyProduct": false,
+              "isLumifyWarranty": false,
+              "isProductLanguageConfigurable": null,
+              "listBasePrice": {
+                "currencyIso": "USD",
+                "value": 300,
+                "priceType": "BUY",
+                "formattedValue": "$300.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "orderCode": "6591003166",
+              "philipsOrderEntryMap": {
+                "availability": "X"
+              },
+              "productStatus": true,
+              "purchaseOrderNumber": "June 01, 2020",
+              "quantity": 1,
+              "recentReturnStatus": null,
+              "recentReturnedQuantity": null,
+              "replacementOf": null,
+              "requestedReturnQuantity": 0,
+              "returnReason": null,
+              "serialNumber": null,
+              "shippedPrice": null,
+              "shippedQuantity": null,
+              "strikeEntryTotal": {
+                "currencyIso": "USD",
+                "value": 600,
+                "priceType": "BUY",
+                "formattedValue": "$600.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "totalPrice": {
+                "currencyIso": "USD",
+                "value": 438,
+                "priceType": "BUY",
+                "formattedValue": "$438.00",
+                "minQuantity": null,
+                "maxQuantity": null
+              },
+              "unitOfMeasure": "BX",
+              "product": {
+                "addToCartDisabled": null,
+                "addToCartDisabledMessage": null,
+                "alternativeProductID": "989803178051",
+                "approval": "approved",
+                "baseUnitOfMeasureCode": "BX",
+                "brandCode": "PHI",
+                "code": "989803178051",
+                "configurable": false,
+                "configuratorType": null,
+                "ctn": "989803178051",
+                "distChannel": "US",
+                "dtn": "989803178051",
+                "imageURL": "https://images.philips.com/is/image/philipsconsumer/aa4181c0f2cb4db9977ea77c01629fe7",
+                "images": null,
+                "name": "Microstream® Smart CapnoLine® Guard O2 4m Capnography",
+                "productCharacteristics": null,
+                "productOnHold": false,
+                "unitOfMeasure": "BX",
+                "url": "/Philips-Global-Category/supplies/emergency-department/emergency-department/microstream-smart-capnoline-guard-o2-4m-capnography/p/989803178051"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
