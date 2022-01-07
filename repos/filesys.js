@@ -43,7 +43,7 @@ function deleteFile(type, id) {
 
 function readFolderContent({
     type
-}) {
+}, query) {
     let result = [];
     CreatefolderIfNotExist(type)
     return new Promise((res, rej) => {
@@ -57,6 +57,7 @@ function readFolderContent({
 
             }
         }
+        result = getPaginatedItems(result, query);
         res(result);
     });
 }
@@ -137,4 +138,6 @@ module.exports = {
     GetPaginatedItems: getPaginatedItems,
     CollectionList,
     Create : createFile,
+    Update : updateFile,
+    Delete : deleteFile,
 }

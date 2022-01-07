@@ -2,24 +2,35 @@
 const log = console.log;
 const fs = require("fs");
 const express = require("express");
-var cors = require("cors");
+const cors = require("cors");
 const bodyParser = require("body-parser");
 console.clear();
 
 var methodOverride = require('method-override');
+var provider = process.env.PROVIDER || 'filesys';
 
 const repo = function() {
   const reposAvaible = ['nedb' , 'filesys']
-  let provider = process.env.PROVIDER || 'filesys';
   if(reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   log(provider)  
   return require(`./repos/${provider}`);
 }(); 
 
+const ctrl = function() {
+  const exist =  fs.existsSync(`./Controllers/${provider}Ctrl.js`);
+  log(exist  , "exist")
+  if(!exist) return require(`./Controllers/mainCtrl.js`);
+  return require(`./Controllers/${provider}Ctrl.js`);
+}();
+
 if(!repo.init()){
   log('repo init failed')
   process.exit(1)
 }
+
+log(ctrl)
+
+ctrl.Init(repo);
 
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
@@ -40,60 +51,12 @@ app.use(
 app.use(methodOverride())
 app.use(errorHandler)
 
-app.get("/" , async (req, res) => {
- const listOfCollections = await repo.CollectionList();
-  let html =`
-  <h1> Routes already available</h1>
-  <hr>
-  <ul>
-    ${listOfCollections.map(x => `<li><a href="/${x}">/${x}</a></li>`).join('')}
-  </ul>
-    ` 
-  res.send(html)
-});
-
-app.get("/:type/", async (req, res) => {
-  let items = await repo.GetData(req.params);
-  items = repo.GetPaginatedItems(items, req.query)
-  res.send(items);
-});
-
-
-app.get("/:type/:id", async (req, res) => {
-  let item = await repo.GetDataById(req.params);
-  if (typeof item === 'object')
-    res.send(item);
-  else
-    res.sendStatus(item);
-});
-
-app.post("/:type/", async (req, res) => {
-  let { type } = req.params;
-  try {
-   const item =   await repo.Create(type, req.body);
-    res.send(item);
-  } catch (error) {
-    res.send(error);
-  }
-});
-
-// app.put("/:type/:id", async (req, res) => {
-//   let { type, id } = req.params;
-//   if (req.body.id) delete req.body.id;
-//   console.log(req.body)
-//   try {
-//     let obj = await updateFile(type, req.body, id);
-//     res.send(obj);
-//   } catch (error) {
-//     res.send(error);
-//   }
-// });
-
-// app.delete("/:type/:id", async (req, res) => {
-//   let { type, id } = req.params;
-//   deleteFile(type, id);
-//   res.send("Deleted.");
-// });
+app.get("/" , ctrl.Index);
+app.get("/:type/", ctrl.Get);
+app.get("/:type/:id", ctrl.GetById);
+app.post("/:type/", ctrl.Post);
+app.put("/:type/:id", ctrl.Put);
+app.delete("/:type/:id", ctrl.Delete);
 
 
 app.listen(port, () => {
