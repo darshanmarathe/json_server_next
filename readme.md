@@ -1,6 +1,6 @@
 # min_json_server
 
-#**How to start working**
+# **How to start working**
 
 clone repository
 
@@ -42,10 +42,12 @@ http://localhost:3000/users/1
 
 ## Roadmap 
 
-    - Add support for 
     - validations
     - transformations 
     - Webhook 
+    - security
+    - clients (client keys) 
+    - admin panel
 
 May Be
 GraphQL
