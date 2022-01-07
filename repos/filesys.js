@@ -114,8 +114,10 @@ function CollectionList() {
 
 function Init() {
     try {
-        fs.existsSync('./data') || fs.mkdirSync('./data');
-        return true;
+    console.log('Data Folder Selected' , process.env.DATA_FOLDER)
+    db.dataFolder = process.env.DATA_FOLDER || './data';
+    fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
+    return true;
     } catch (error) {
         console.log(error);
         return false
