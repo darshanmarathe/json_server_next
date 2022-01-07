@@ -122,7 +122,7 @@ function CollectionList() {
     return listOfFolders;
 }
 
-function init() {
+function Init() {
     try {
         fs.existsSync('./data') || fs.mkdirSync('./data');
         return true;
@@ -132,10 +132,9 @@ function init() {
     }
 }
 module.exports = {
-    init,
+    Init,
     GetData: readFolderContent,
     GetDataById : readfileContent,
-    GetPaginatedItems: getPaginatedItems,
     CollectionList,
     Create : createFile,
     Update : updateFile,
