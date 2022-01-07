@@ -34,18 +34,18 @@ http://localhost:3000/users/1
 
 
 ## DataStore
-FileSystem (Default)
-neDb
-mongodb (not implemented yet)
-redis (not implemented yet)
-sql server (not implemented yet)
+    - FileSystem (Default)
+    - neDb
+    - mongodb (not implemented yet)
+    - redis (not implemented yet)
+    - sql server (not implemented yet)
 
 ## Roadmap 
 
-Add support for 
-validations
-transformations 
-Webhook 
+    - Add support for 
+    - validations
+    - transformations 
+    - Webhook 
 
 May Be
 GraphQL
