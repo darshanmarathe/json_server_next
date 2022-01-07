@@ -23,7 +23,7 @@ const ctrl = function() {
   return require(`./Controllers/${provider}Ctrl.js`);
 }();
 
-if(!repo.init()){
+if(!repo.Init()){
   log('repo init failed')
   process.exit(1)
 }

@@ -1,4 +1,4 @@
 cls
 @echo starting server......
-set PROVIDER=conmosdb
+set PROVIDER=nedb
 npm run watch
