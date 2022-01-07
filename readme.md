@@ -33,7 +33,14 @@ http://localhost:3000/users/1
 
 
 
-##Roadmap 
+## DataStore
+FileSystem (Default)
+neDb
+mongodb (not implemented yet)
+redis (not implemented yet)
+sql server (not implemented yet)
+
+## Roadmap 
 
 Add support for 
 validations

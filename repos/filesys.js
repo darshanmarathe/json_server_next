@@ -1,5 +1,5 @@
 const fs = require('fs');
-const _ = require("lodash")
+const pager = require('../common/pager');
 
 
 function createFile(type, body) {
@@ -57,7 +57,7 @@ function readFolderContent({
 
             }
         }
-        result = getPaginatedItems(result, query);
+        result = pager.getPaginatedItems(result, query);
         res(result);
     });
 }
@@ -86,16 +86,6 @@ function readfileContent({
     });
 }
 
-function getPaginatedItems(items, {
-    _page,
-    _pageSize
-}) {
-    var pg = _page || 1,
-        pgSize = _pageSize || items.length,
-        offset = (pg - 1) * pgSize,
-        pagedItems = _.drop(items, offset).slice(0, pgSize);
-    return pagedItems;
-}
 
 function UUID() {
     var dt = new Date().getTime();
