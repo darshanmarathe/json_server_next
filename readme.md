@@ -16,6 +16,10 @@ Get All
 http://localhost:3000/users/
 
 
+Get All with Pageing
+http://localhost:3000/users?_page=1&_pageSize=2
+
+
 Get By id
 http://localhost:3000/users/1
 
