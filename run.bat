@@ -1,4 +1,4 @@
 cls
 @echo starting server......
-set PROVIDER=nedb
+set PROVIDER=mongo
 npm run watch

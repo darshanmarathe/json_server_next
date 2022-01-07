@@ -49,7 +49,7 @@ const Put = async (req, res) => {
 }
 const Delete = async (req, res) => {
     let { type, id } = req.params;
-    repo.Delete(type, id);
+    await repo.Delete(type, id);
     res.send("Deleted.");
 }
 

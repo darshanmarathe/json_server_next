@@ -40,7 +40,9 @@ http://localhost:3000/users/1
 ## DataStore
     - FileSystem (Default)
     - neDb
-    - mongodb (not implemented yet)
+    - mongodb 
+        - ENV: DB_NAME (default : mjserverDB)
+        - ENV: CONNECTION_STRING (default : mongodb://localhost:27017)
     - redis (not implemented yet)
     - sql server (not implemented yet)
 
