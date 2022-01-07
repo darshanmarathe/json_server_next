@@ -48,6 +48,8 @@ http://localhost:3000/users/1
     - security
     - clients (client keys) 
     - admin panel
+    - schemas
+    - headless cms
 
 May Be
 GraphQL
