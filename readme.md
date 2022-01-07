@@ -45,7 +45,8 @@ http://localhost:3000/users/1
     - sql server (not implemented yet)
 
 ## Roadmap 
-
+    
+    - Caching layer
     - validations
     - transformations 
     - Webhook 
@@ -54,6 +55,4 @@ http://localhost:3000/users/1
     - admin panel
     - schemas
     - headless cms
-
-May Be
-GraphQL
+    - GraphQL (When schema available)
