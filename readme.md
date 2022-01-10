@@ -37,7 +37,10 @@ http://localhost:3000/users/1
     - mongodb
         - ENV: DB_NAME (default : mjserverDB)
         - ENV: CONNECTION_STRING (default : mongodb://localhost:27017)
-    - redis (not implemented yet)
+    - redis
+        - ENV: REDIS_URL (default : redis://localhost:6379)
+        - ENV: REDIS_USERNAME=default (default : default)
+        - ENV: REDIS_PWD (default : null)
     - sql server (not implemented yet)
 
 ## Roadmap
