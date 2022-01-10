@@ -10,7 +10,7 @@ var methodOverride = require('method-override');
 var provider = process.env.PROVIDER || 'filesys';
 
 const repo = function () {
-  const reposAvaible = ['nedb', 'filesys' , 'mongo']
+  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis']
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   log(provider)
   return require(`./repos/${provider}`);

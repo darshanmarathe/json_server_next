@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mongodb": "^4.3.0",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "redis": "^4.0.1"
   }
 }

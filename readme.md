@@ -42,14 +42,14 @@ http://localhost:3000/users/1
 
 ## Roadmap
 
-    - Reverse Proxy
     - Caching layer
+    - admin panel
     - validations
     - transformations
     - Webhook
     - security (JWT)
     - clients (client keys)
-    - admin panel
+    - Reverse Proxy
     - schemas
     - headless cms
     - GraphQL (When schema available)

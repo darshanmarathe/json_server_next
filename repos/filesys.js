@@ -1,5 +1,5 @@
 const fs = require('fs');
-const pager = require('../common/pager');
+const { getPaginatedItems, UUID } = require('../common/index');
 
 
 function createFile(type, body) {
@@ -57,7 +57,7 @@ function readFolderContent({
 
             }
         }
-        result = pager.getPaginatedItems(result, query);
+        result = getPaginatedItems(result, query);
         res(result);
     });
 }
@@ -87,18 +87,6 @@ function readfileContent({
 }
 
 
-function UUID() {
-    var dt = new Date().getTime();
-    var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-        /[xy]/g,
-        function (c) {
-            var r = (dt + Math.random() * 16) % 16 | 0;
-            dt = Math.floor(dt / 16);
-            return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-        }
-    );
-    return uuid;
-}
 
 function CollectionList() {
     let listOfFolders = [];
@@ -114,10 +102,10 @@ function CollectionList() {
 
 function Init() {
     try {
-    console.log('Data Folder Selected' , process.env.DATA_FOLDER)
-    db.dataFolder = process.env.DATA_FOLDER || './data';
-    fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
-    return true;
+        console.log('Data Folder Selected', process.env.DATA_FOLDER)
+        db.dataFolder = process.env.DATA_FOLDER || './data';
+        fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
+        return true;
     } catch (error) {
         console.log(error);
         return false
@@ -126,9 +114,9 @@ function Init() {
 module.exports = {
     Init,
     GetData: readFolderContent,
-    GetDataById : readfileContent,
+    GetDataById: readfileContent,
     CollectionList,
-    Create : createFile,
-    Update : updateFile,
-    Delete : deleteFile,
+    Create: createFile,
+    Update: updateFile,
+    Delete: deleteFile,
 }

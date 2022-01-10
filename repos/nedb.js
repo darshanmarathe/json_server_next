@@ -1,7 +1,6 @@
 const fs = require("fs");
 var Datastore = require('nedb');
-const pager = require('../common/pager');
-var db = {};
+const { getPaginatedItems, UUID } = require('../common/index');
 
 var initDb = (collectionName) => {
     if (!(collectionName in db)) {
@@ -12,18 +11,18 @@ var initDb = (collectionName) => {
 }
 
 const Init = () => {
-    console.log('Data Folder Selected' , process.env.DATA_FOLDER)
+    console.log('Data Folder Selected', process.env.DATA_FOLDER)
     db.dataFolder = process.env.DATA_FOLDER || './data';
     fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
     return true;
 }
-const GetData = ({type}, query) => {
+const GetData = ({ type }, query) => {
     initDb(type)
     return new Promise((res, rej) => {
         if (type in db) {
             db[type].find({}, (err, docs) => {
                 if (err) rej(err);
-                const result = pager.getPaginatedItems(docs, query);
+                const result = getPaginatedItems(docs, query);
                 res(result);
             });
         } else {
@@ -39,7 +38,7 @@ const GetDataById = ({
     initDb(type)
     return new Promise((res, rej) => {
         if (type in db) {
-            db[type].find({_id : id}, (err, docs) => {
+            db[type].find({ _id: id }, (err, docs) => {
                 if (err) rej(err);
                 res(docs);
             });
@@ -50,12 +49,12 @@ const GetDataById = ({
 }
 const CollectionList = () => {
     let listOfFolders = [];
-   
+
     const files = fs.readdirSync(db.dataFolder);
 
     console.log(files)
     for (const file of files) {
-        
+
         if (file.indexOf('.db') >= 0)
             listOfFolders.push(file.replace('.db', ''));
     }
@@ -66,7 +65,7 @@ const Create = (type, body) => {
     let item = body;
     return new Promise((res, rej) => {
         db[type].insert(item, (err, newDoc) => {
-            if(err) rej(err);
+            if (err) rej(err);
             res(newDoc);
         })
     })
@@ -74,10 +73,10 @@ const Create = (type, body) => {
 const Update = (type, body, id) => {
     initDb(type)
     return new Promise((res, rej) => {
-        db[type].update({ _id: id }, body, {  }, function () {
-            res(body)  
-          });
-          
+        db[type].update({ _id: id }, body, {}, function () {
+            res(body)
+        });
+
     })
 }
 const Delete = (type, id) => {
@@ -85,15 +84,15 @@ const Delete = (type, id) => {
 
     db[type].remove({ _id: id }, {}, function (err, numRemoved) {
         // numRemoved = 1
-      });
+    });
 }
 
 module.exports = {
     Init,
-    GetData, 
-    GetDataById , 
+    GetData,
+    GetDataById,
     CollectionList,
-    Create , 
-    Update , 
-    Delete , 
+    Create,
+    Update,
+    Delete,
 }
