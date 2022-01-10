@@ -15,45 +15,40 @@ now this data is avaible
 Get All
 http://localhost:3000/users/
 
-
 Get All with Pageing
-http://localhost:3000/users?_page=1&_pageSize=2
-
+http://localhost:3000/users?\_page=1&\_pageSize=2
 
 Get By id
 http://localhost:3000/users/1
 
-
 Post
 http://localhost:3000/users/ // body as json
-
 
 Put
 http://localhost:3000/users/1 // body as json
 
-
 Delete
 http://localhost:3000/users/1
 
-
-
 ## DataStore
+
     - FileSystem (Default)
     - neDb
-    - mongodb 
+    - mongodb
         - ENV: DB_NAME (default : mjserverDB)
         - ENV: CONNECTION_STRING (default : mongodb://localhost:27017)
     - redis (not implemented yet)
     - sql server (not implemented yet)
 
-## Roadmap 
-    
+## Roadmap
+
+    - Reverse Proxy
     - Caching layer
     - validations
-    - transformations 
-    - Webhook 
-    - security
-    - clients (client keys) 
+    - transformations
+    - Webhook
+    - security (JWT)
+    - clients (client keys)
     - admin panel
     - schemas
     - headless cms
