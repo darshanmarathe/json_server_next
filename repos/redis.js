@@ -79,7 +79,12 @@ const CollectionList = async () => {
     await initDb();
     let keys = await client.keys("MJS:*")
     keys = keys.map(x => x.split(":")[1])
-    return keys;
+    let nKeys = [];
+    for (const _key of keys) {
+        if (!nKeys.includes(_key))
+            nKeys.push(_key)
+    }
+    return nKeys;
 }
 const Create = async (type, body) => {
     const key = getKey(type);
