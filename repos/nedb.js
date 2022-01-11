@@ -2,6 +2,7 @@ const fs = require("fs");
 var Datastore = require('nedb');
 const { getPaginatedItems, UUID } = require('../common/index');
 
+let db = {};
 var initDb = (collectionName) => {
     if (!(collectionName in db)) {
         console.log(db)
@@ -11,8 +12,8 @@ var initDb = (collectionName) => {
 }
 
 const Init = () => {
-    console.log('Data Folder Selected', process.env.DATA_FOLDER)
     db.dataFolder = process.env.DATA_FOLDER || './data';
+    console.log('Data Folder Selected :', db.dataFolder)
     fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
     return true;
 }

@@ -7,18 +7,19 @@ const bodyParser = require("body-parser");
 console.clear();
 
 var methodOverride = require('method-override');
-var provider = process.env.PROVIDER || 'filesys';
+var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
+
+const AdminCtrol = require('./Controllers/Admin/Crud');
+
 
 const repo = function () {
   const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis']
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
-  log(provider)
   return require(`./repos/${provider}`);
 }();
 
 const ctrl = function () {
   const exist = fs.existsSync(`./Controllers/${provider}Ctrl.js`);
-  log(exist, "exist")
   if (!exist) return require(`./Controllers/mainCtrl.js`);
   return require(`./Controllers/${provider}Ctrl.js`);
 }();
@@ -28,9 +29,10 @@ if (!repo.Init()) {
   process.exit(1)
 }
 
-log(ctrl)
 
 ctrl.Init(repo);
+AdminCtrol.Init(repo);
+
 
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
@@ -51,6 +53,18 @@ app.use(
 app.use(methodOverride())
 app.use(errorHandler)
 
+
+
+//Admin Ctrl
+app.get("/admin/", AdminCtrol.Index);
+app.get("/admin/:collection/", AdminCtrol.Get);
+app.get("/admin/:collection/:id", AdminCtrol.GetById);
+app.post("/admin/:collection/", AdminCtrol.Post);
+app.put("/admin/:collection/:id", AdminCtrol.Put);
+
+
+
+//Main Ctrl
 app.get("/", ctrl.Index);
 app.get("/:type/", ctrl.Get);
 app.get("/:type/:id", ctrl.GetById);
@@ -59,6 +73,14 @@ app.put("/:type/:id", ctrl.Put);
 app.delete("/:type/:id", ctrl.Delete);
 
 
+
+//Admin UI
+
+
+
+//Admin Auth
+
+
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  log(`Example app listening at http://localhost:${port}`);
 });

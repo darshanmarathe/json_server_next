@@ -1,0 +1,10 @@
+{
+  "users": [
+    {
+      "username": "Admin",
+      "pasword": "1234",
+      "apikeys": ["xtyssslours13"],
+      "isAdmin": true
+    }
+  ]
+}

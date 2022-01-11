@@ -1,0 +1,21 @@
+{
+  "name": "todos",
+  "secured": true,
+  "rev-proxy": true,
+  "proxys": {
+    "get": "",
+    "put": "",
+    "post": "",
+    "delete": ""
+  },
+  "validations": "function (obj) {return true}",
+  "transformation_in": "function (obj) {return obj}",
+  "transformation_out": "function (obj) {return obj}",
+  "WebHooks": {
+    "put": "",
+    "post": "",
+    "delete": ""
+  },
+  "schemna": {},
+  "users": []
+}
