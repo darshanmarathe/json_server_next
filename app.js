@@ -8,12 +8,13 @@ console.clear();
 
 var methodOverride = require('method-override');
 var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
+log(`Provider selected: ${provider}`)
 
 const AdminCtrol = require('./Controllers/Admin/Crud');
 
 
 const repo = function () {
-  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis']
+  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis' ,'postgres'];
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   return require(`./repos/${provider}`);
 }();
