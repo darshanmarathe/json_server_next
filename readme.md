@@ -41,6 +41,8 @@ http://localhost:3000/users/1
         - ENV: REDIS_URL (default : redis://localhost:6379)
         - ENV: REDIS_USERNAME=default (default : default)
         - ENV: REDIS_PWD (default : null)
+    - postgrs 
+        - ENV: CONNECTION_STRING  (default :'postgresql://localhost:5432');
     - sql server (not implemented yet)
 
 ## Roadmap
