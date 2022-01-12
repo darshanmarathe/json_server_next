@@ -17,9 +17,15 @@ const Index = async (req, res) => {
   res.send(html)
 }
 
-const Get = async (req, res) => {
-  let items = await repo.GetData(req.params, req.query);
 
+const Get = async (req, res) => {
+  if(req.params.type.toUpperCase() === 'FAVICON.ICO') 
+      {
+        res.send(null);
+      return;
+    }
+
+  let items = await repo.GetData(req.params, req.query);
   res.send(items);
 }
 const GetById = async (req, res) => {
