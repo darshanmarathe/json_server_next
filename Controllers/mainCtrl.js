@@ -5,6 +5,7 @@ const Init = (_repo) => {
 }
 
 const Index = async (req, res) => {
+  
   let listOfCollections = await repo.CollectionList();
   listOfCollections = listOfCollections.filter((x) => x.toLowerCase() !== "admin")
   let html = `

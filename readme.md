@@ -47,6 +47,7 @@ http://localhost:3000/users/1
 
 ## Roadmap
 
+    - Hypermedia API
     - Caching layer
     - admin panel
     - validations
