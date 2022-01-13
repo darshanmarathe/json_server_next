@@ -7,10 +7,8 @@ clone repository
 npm install
 npm run start
 
-go to data folder
-add any folder for example "users"
-add 1.json file with some json data
-now this data is avaible
+Check Which DataStore you like and start using it.
+
 
 Get All
 http://localhost:3000/users/
@@ -45,11 +43,16 @@ http://localhost:3000/users/1
         - ENV: CONNECTION_STRING  (default :'postgresql://localhost:5432');
     - sql server (not implemented yet)
 
+
+## Features
+
+    - Caching layer (ENV: CACHE_TTL=100)
+
 ## Roadmap
 
-    - Hypermedia API
-    - Caching layer
+    - admin Area service
     - admin panel
+    - Hypermedia API
     - validations
     - transformations
     - Webhook
