@@ -34,7 +34,9 @@ var createTable = async (tableName) => {
 const Init = async () => {
     console.log('initing postgress', url)
     try {
-        sql = await postgres(url);
+        sql = await postgres(url , {
+            idle_timeout: 2
+          });
         tables = await CollectionList()
         return true
 
@@ -59,6 +61,7 @@ console.log(query)
                 _id: x._id
             }
         });
+
             res(getPaginatedItems(unpaged , query))
         });
     });
