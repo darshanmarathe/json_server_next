@@ -14,7 +14,7 @@ const AdminCtrol = require('./Controllers/Admin/Crud');
 
 
 const repo = function () {
-  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis' ,'postgres'];
+  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis' ,'postgres' , 'sql'];
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   return require(`./repos/${provider}`);
 }();
