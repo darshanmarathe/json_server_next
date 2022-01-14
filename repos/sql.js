@@ -13,36 +13,25 @@ var initDb = async (collectionName) => {
   return true;
 };
 
-const getTableName = (tableName) => "MJS_" + tableName.toUpperCase();
+//for SQL Injection as mssql package dose not add dynamic table names
+const Santize = (param) => param.replace(/;/g , '').replace(/--/g , '').replace(/GO/g , '');
+
+const getTableName = (tableName) => "MJS_" + Santize(tableName.toUpperCase());
 var createTable = async (tableName) => {
   if (tableName === "") return;
   await sql.connect(url);
   let _tableName = getTableName(tableName);
 
-  console.log(`if not exists (select * from sysobjects where name='${_tableName}' and xtype='U')
+  return await sql.query(`if not exists (select * from sysobjects where name='${_tableName}' and xtype='U')
 
   create table ${_tableName}
     (
-        _Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
+        _id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
         document nvarchar(max)
        
     )`);
 
-  return await sql.query`if not exists (select * from sysobjects where name='${_tableName}' and xtype='U')
-
-  create table ${_tableName}
-    (
-        _Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
-        document nvarchar(max)
-       
-    )`;
-
-  return sql.query`create table ${_tableName}
-  (
-      _Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY DEFAULT NEWID(),
-      document nvarchar(max)
-     
-  )`;
+ 
 };
 
 const Init = async () => {
@@ -58,41 +47,45 @@ const Init = async () => {
   }
 };
 
+
 const GetData = async ({ type }, query) => {
   await initDb(type);
   let _tableName = getTableName(type);
   console.log(query);
   return new Promise((res, rej) => {
-    sql`SELECT * FROM ${_tableName}`.then((results) => {
+    sql.query(`SELECT * FROM ${_tableName}`).then((results) => {
       console.log(results);
-      let unpaged = results.map((x) => {
+      let unpaged = results.recordset.map((x) => {
+        console.log(x)
         return {
-          ...x.document,
-          _id: x._id,
+          ...JSON.parse(x.document),
+          _id: x._Id || x._id,
         };
       });
       res(getPaginatedItems(unpaged, query));
     });
   });
 };
+
 const GetDataById = ({ type, id }) => {
   initDb(type);
   let _tableName = getTableName(type);
   return new Promise((res, rej) => {
-    console.log(sql(id));
-    sql`SELECT * FROM ${sql(_tableName)} 
-        where _id::text = ${sql(id).first}`.then((results) => {
+
+    sql.query(`SELECT * FROM ${_tableName} 
+        where _id = '${id}'`).then((results) => {
       res(
-        results.map((x) => {
+        results.recordset.map((x) => {
           return {
-            ...x.document,
-            _id: x._id,
+            ...JSON.parse(x.document),
+            _id: x._id || x._Id,
           };
-        })
+        })[0] || null
       );
     });
   });
 };
+
 const CollectionList = async () => {
   await sql.connect(url);
 
@@ -112,13 +105,15 @@ const Create = async (type, body) => {
   await initDb(type);
   let _tableName = getTableName(type);
   return new Promise((res, rej) => {
-    sql`
-        insert into ${sql(_tableName)} (document) values (
-          ${sql.json(body)}	
-        ) RETURNING _id`
+    sql.query(`
+        insert into ${_tableName} (document) 
+        OUTPUT inserted._id
+        values (
+          '${JSON.stringify(body)}'	
+        );`)
       .then((result) => {
-        console.log("results", result);
-        body._id = result[0]._id;
+        console.log("results", result.recordsets[0]);
+        body._id = result.recordset[0]._id;
         res(body);
       })
       .catch((err) => {
@@ -130,25 +125,25 @@ const Create = async (type, body) => {
 
 const Update = (type, body, id) => {
   initDb(type);
+  
 
   let _tableName = getTableName(type);
 
   return new Promise((res, rej) => {
-    sql`update ${sql(_tableName)} set document = ${sql.json(body)} 
-        WHERE _id::text = ${sql(id).first}  returning *`.then((result) => {
-      const _res = result[0].document;
-      _res._id = id;
-      res(_res);
+    sql.query(`update ${_tableName} set document ='${JSON.stringify(body)}' 
+        WHERE _id = '${id}'`).then((result) => {
+     console.log(result)  
+         res(body);
     });
   });
 };
 const Delete = (type, id) => {
   initDb(type);
-  console.log(sql(id));
+
   let _tableName = getTableName(type);
 
-  sql`DELETE FROM ${sql(_tableName)} 
-    where _id::text = ${sql(id).first}`.then((results) => {});
+  sql.query(`DELETE FROM ${_tableName} 
+    where _id = '${id}'`).then((results) => {console.log(results)});
 };
 
 module.exports = {

@@ -6,4 +6,3 @@ set CONNECTION_STRING=Server^=tcp:minjsonserv.database.windows.net,1433;Initial 
 
 npm run watch
 
-

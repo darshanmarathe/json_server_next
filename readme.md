@@ -43,7 +43,8 @@ http://localhost:3000/users/1
         - ENV: REDIS_PWD (default : null)
     - postgrs 
         - ENV: CONNECTION_STRING  (default :'postgresql://localhost:5432');
-    - sql server (not implemented yet)
+    - sql server 
+        - ENV: CONNECTION_STRING  (default :'');
 
 ## Roadmap
 
