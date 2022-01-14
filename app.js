@@ -10,8 +10,10 @@ var methodOverride = require('method-override');
 var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
 log(`Provider selected: ${provider}`)
 
+const _cache = require('./common/Cache.js');
 const AdminCtrol = require('./Controllers/Admin/Crud');
 
+_cache.Init();
 
 const repo = function () {
   const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis' ,'postgres' , 'sql'];
@@ -31,7 +33,7 @@ if (!repo.Init()) {
 }
 
 
-ctrl.Init(repo);
+ctrl.Init(repo, _cache);
 AdminCtrol.Init(repo);
 
 
