@@ -17,9 +17,13 @@
     "lodash": "^4.17.21",
     "method-override": "^3.0.0",
     "mongodb": "^4.3.0",
+    "mssql": "^7.3.0",
     "nedb": "^1.8.0",
     "node-cache": "^5.1.2",
     "postgres": "^1.0.2",
     "redis": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }
