@@ -5,7 +5,6 @@ const { getPaginatedItems, UUID } = require('../common/index');
 let db = {};
 var initDb = (collectionName) => {
     if (!(collectionName in db)) {
-        console.log(db)
         db[collectionName] = new Datastore(`${db.dataFolder}/${collectionName}.db`);
         db[collectionName].loadDatabase();
     }

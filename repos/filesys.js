@@ -1,20 +1,20 @@
 const fs = require('fs');
 const { getPaginatedItems, UUID } = require('../common/index');
 
-
+var db = {};
 function createFile(type, body) {
     let item = body;
-    const has_id = "id" in item;
-    let id = has_id ? item.id : UUID();
+    const has_id = "_id" in item;
+    let id = has_id ? item._id : UUID();
 
-    body.id = id;
+    body._id = id;
     body._createdOn = new Date();
     return new Promise((res, rej) => {
         CreatefolderIfNotExist(type);
-        if (fs.existsSync(`./data/${type}/${id}.json`)) {
+        if (fs.existsSync(`${db.dataFolder}/${type}/${id}.json`)) {
             rej(new Error("record already exist."));
         }
-        fs.writeFileSync(`./data/${type}/${id}.json`, JSON.stringify(body));
+        fs.writeFileSync(`${db.dataFolder}/${type}/${id}.json`, JSON.stringify(body));
         res(body);
     });
 }
@@ -22,14 +22,14 @@ function createFile(type, body) {
 function updateFile(type, body, id) {
     body._updatedOn = new Date();
     return new Promise(async (res, rej) => {
-        if (fs.existsSync(`./data/${type}/${id}.json`)) {
+        if (fs.existsSync(`${db.dataFolder}/${type}/${id}.json`)) {
             const file = await readfileContent({
                 type,
                 id
             });
             let obj = Object.assign({}, file, body);
             console.log(obj);
-            fs.writeFileSync(`./data/${type}/${id}.json`, JSON.stringify(obj));
+            fs.writeFileSync(`${db.dataFolder}/${type}/${id}.json`, JSON.stringify(obj));
 
             res(obj);
         }
@@ -38,7 +38,7 @@ function updateFile(type, body, id) {
 }
 
 function deleteFile(type, id) {
-    fs.unlinkSync(`./data/${type}/${id}.json`);
+    fs.unlinkSync(`${db.dataFolder}/${type}/${id}.json`);
 }
 
 function readFolderContent({
@@ -47,9 +47,9 @@ function readFolderContent({
     let result = [];
     CreatefolderIfNotExist(type)
     return new Promise((res, rej) => {
-        let files = fs.readdirSync(`./data/${type}/`);
+        let files = fs.readdirSync(`${db.dataFolder}/${type}/`);
         for (const file of files) {
-            let data = fs.readFileSync(`./data/${type}/${file}`);
+            let data = fs.readFileSync(`${db.dataFolder}/${type}/${file}`);
             try {
                 let record_data = JSON.parse(data);
                 result.push(record_data);
@@ -63,9 +63,9 @@ function readFolderContent({
 }
 
 function CreatefolderIfNotExist(type) {
-    console.log(`./data/${type}`);
-    if (!fs.existsSync(`./data/${type}`)) {
-        fs.mkdirSync(`./data/${type}`);
+    console.log(`${db.dataFolder}/${type}`);
+    if (!fs.existsSync(`${db.dataFolder}/${type}`)) {
+        fs.mkdirSync(`${db.dataFolder}/${type}`);
     }
 }
 
@@ -74,8 +74,8 @@ function readfileContent({
     id
 }) {
     return new Promise((res, rej) => {
-        if (fs.existsSync(`./data/${type}/${id}.json`)) {
-            fs.readFile(`./data/${type}/${id}.json`, (err, data) => {
+        if (fs.existsSync(`${db.dataFolder}/${type}/${id}.json`)) {
+            fs.readFile(`${db.dataFolder}/${type}/${id}.json`, (err, data) => {
                 if (err) rej(err);
                 let record_data = JSON.parse(data);
                 res(record_data);
@@ -90,7 +90,7 @@ function readfileContent({
 
 function CollectionList() {
     let listOfFolders = [];
-    const dir = './data/'
+    const dir = db.dataFolder + '/'
     const files = fs.readdirSync(dir)
 
     for (const file of files) {
@@ -103,14 +103,27 @@ function CollectionList() {
 function Init() {
     try {
         db.dataFolder = process.env.DATA_FOLDER || './data';
-        console.log('Data Folder Selected : ', db.dataFolder)
+        db.adminDataFolder = process.env.ADMIN_DATA_FOLDER || './admin_data';
+        console.log('Data Folder Selected : ', db.dataFolder, db.adminDataFolder)
         fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
+        fs.existsSync(db.adminDataFolder) || fs.mkdirSync(db.adminDataFolder);
         return true;
     } catch (error) {
         console.log(error);
         return false
     }
 }
+
+function AdminGet(collectionName) {
+
+}
+
+
+function AdminSet(collectionName, obj) {
+
+}
+
+
 module.exports = {
     Init,
     GetData: readFolderContent,
@@ -119,4 +132,6 @@ module.exports = {
     Create: createFile,
     Update: updateFile,
     Delete: deleteFile,
+    AdminGet: AdminGet,
+    AdminSet: AdminSet,
 }

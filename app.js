@@ -16,7 +16,7 @@ const AdminCtrol = require('./Controllers/Admin/Crud');
 _cache.Init();
 
 const repo = function () {
-  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis' ,'postgres' , 'sql'];
+  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql'];
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   return require(`./repos/${provider}`);
 }();
@@ -58,12 +58,14 @@ app.use(errorHandler)
 
 
 
-//Admin Ctrl
+//Admin UI
 app.get("/admin/", AdminCtrol.Index);
-app.get("/admin/:collection/", AdminCtrol.Get);
-app.get("/admin/:collection/:id", AdminCtrol.GetById);
-app.post("/admin/:collection/", AdminCtrol.Post);
-app.put("/admin/:collection/:id", AdminCtrol.Put);
+
+//Admin Ctrl
+app.get("/admin/:collections/", AdminCtrol.Get);
+app.get("/admin/:collections/:id", AdminCtrol.GetById);
+app.post("/admin/:collections/", AdminCtrol.Post);
+app.put("/admin/:collections/:id", AdminCtrol.Put);
 
 
 
@@ -74,12 +76,6 @@ app.get("/:type/:id", ctrl.GetById);
 app.post("/:type/", ctrl.Post);
 app.put("/:type/:id", ctrl.Put);
 app.delete("/:type/:id", ctrl.Delete);
-
-
-
-//Admin UI
-
-
 
 //Admin Auth
 

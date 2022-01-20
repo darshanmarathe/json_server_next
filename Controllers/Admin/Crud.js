@@ -1,13 +1,16 @@
 var repo = null
 
 const Init = async (_repo) => {
-    repo = _repo;
+  repo = _repo;
 }
 const Index = async (req, res) => {
-    let listOfCollections = await repo.CollectionList();
-    listOfCollections = listOfCollections.filter((x) => x.toLowerCase() !== "admin")
 
-    let html = `
+}
+const Get = async (req, res) => {
+  let listOfCollections = await repo.CollectionList();
+  listOfCollections = listOfCollections.filter((x) => x.toLowerCase() !== "admin")
+
+  let html = `
     <h1> Routes already available</h1>
     <hr>
     <ul>
@@ -15,11 +18,8 @@ const Index = async (req, res) => {
     </ul>
       `
 
-    console.log(html)
-    res.send(html)
-}
-const Get = async (req, res) => {
-
+  console.log(html)
+  res.send(html)
 }
 const GetById = async (req, res) => {
 
@@ -36,11 +36,11 @@ const Delete = async (req, res) => {
 
 
 module.exports = {
-    Init,
-    Index,
-    Get,
-    GetById,
-    Post,
-    Put,
-    Delete
+  Init,
+  Index,
+  Get,
+  GetById,
+  Post,
+  Put,
+  Delete
 }
