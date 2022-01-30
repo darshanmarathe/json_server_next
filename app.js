@@ -62,10 +62,10 @@ app.use(errorHandler)
 app.get("/admin/", AdminCtrol.Index);
 
 //Admin Ctrl
-app.get("/admin/:collections/", AdminCtrol.Get);
-app.get("/admin/:collections/:id", AdminCtrol.GetById);
-app.post("/admin/:collections/", AdminCtrol.Post);
-app.put("/admin/:collections/:id", AdminCtrol.Put);
+app.get("/admin/collections/", AdminCtrol.Get);
+app.get("/admin/collections/:id", AdminCtrol.GetById);
+app.post("/admin/collections/", AdminCtrol.Post);
+app.put("/admin/collections/:id", AdminCtrol.Put);
 
 
 

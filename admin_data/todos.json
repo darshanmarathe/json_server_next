@@ -1,0 +1,17 @@
+{
+  "name": "todos",
+  "secured": false,
+  "realTime": true,
+  "cached": false,
+  "cacheTTL": 10000,
+  "rev-proxy": true,
+  "proxys": { "get": "", "put": "", "post": "", "delete": "" },
+  "validations": "function (obj) {return true}",
+  "transformation_in": "function (obj) {return obj}",
+  "transformation_out": "function (obj) {return obj}",
+  "WebHooks": { "put": "", "post": "", "delete": "" },
+  "queue": { "provider": "RabbitMQ/Kafka/Azure/SNS" },
+  "schemna": {},
+  "users": [],
+  "_updatedOn": "2022-01-30T10:20:53.467Z"
+}

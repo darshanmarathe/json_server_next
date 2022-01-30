@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app",
-    "watch": "nodemon --ignore 'data/*.json' app"
+    "watch": "nodemon --ignore 'data/*.json' --ignore 'admin_data/*.json' app",
+    "watchadm": "nodemon --ignore 'admin_data/*.json' app"
   },
   "keywords": [],
   "author": "",

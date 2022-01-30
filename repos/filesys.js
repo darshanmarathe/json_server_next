@@ -116,13 +116,47 @@ function Init() {
     }
 }
 
-function AdminGet(collectionName) {
-
+function CollectionGet(collectionName) {
+    return new Promise((res, rej) => {
+        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
+            fs.readFile(`${db.adminDataFolder}/${collectionName}.json`, (err, data) => {
+                if (err) res({});
+                let record_data = JSON.parse(data);
+                res(record_data);
+            });
+        } else {
+            return res(404)
+        }
+    });
 }
 
 
-function AdminSet(collectionName, obj) {
+function CollectionSet(collectionName, obj) {
+    obj._updatedOn = new Date();
+    return new Promise(async (res, rej) => {
+        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
+            const file = await CollectionGet(collectionName);
+            let _obj = Object.assign({}, file, obj);
+            console.log(_obj);
 
+            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(_obj));
+
+            res(obj);
+        }else {
+            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(obj));
+            res(obj)
+        }
+
+       
+    });
+}
+
+function UserGet(username) {
+
+}
+
+function UserSet(userObj) {
+    
 }
 
 
@@ -134,6 +168,8 @@ module.exports = {
     Create: createFile,
     Update: updateFile,
     Delete: deleteFile,
-    AdminGet: AdminGet,
-    AdminSet: AdminSet,
+    CollectionGet,
+    CollectionSet,
+    UserGet: UserGet,
+    UertSet: UserSet
 }
