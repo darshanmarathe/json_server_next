@@ -1,0 +1,30 @@
+{
+    "name": "todos",
+    "secured": true,
+    "realTime": true,
+    "cached": true,
+    "cacheTTL" : 10000,
+    "rev-proxy": true,
+    "proxys": {
+      "get": "",
+      "put": "",
+      "post": "",
+      "delete": ""
+    },
+    "validations": "function (obj) {return true}",
+    "transformation_in": "function (obj) {return obj}",
+    "transformation_out": "function (obj) {return obj}",
+    "WebHooks": {
+      "put": "",
+      "post": "",
+      "delete": ""
+    },
+    "queue" : {
+      "provider" : "Rabbit/SNS/kafka",
+      "queuname" : "topic",
+      "postOn" : ["PUT" , "DELETE" , "POST"]
+    },
+    "schemna": {},
+    "users": []
+  }
+  

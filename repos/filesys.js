@@ -115,12 +115,48 @@ function Init() {
 }
 
 function AdminGet(collectionName) {
-
+    return new Promise((res, rej) => {
+        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
+            fs.readFile(`${db.adminDataFolder}/${collectionName}.json`, (err, data) => {
+                if (err) rej(err);
+                let record_data = JSON.parse(data);
+                res(record_data);
+            });
+        } else {
+            return res(404)
+        }
+    });
 }
 
 
 function AdminSet(collectionName, obj) {
+    body._updatedOn = new Date();
+    return new Promise(async (res, rej) => {
+        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
+            const file = await readfileContent({
+                type,
+                id
+            });
+            let obj = Object.assign({}, file, body);
 
+            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(obj));
+
+            res(obj);
+        }else {
+            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(obj));
+            res(obj)
+        }
+
+       
+    });
+}
+
+function UserGet(username) {
+
+}
+
+function UserSet(userObj) {
+    
 }
 
 
@@ -134,4 +170,6 @@ module.exports = {
     Delete: deleteFile,
     AdminGet: AdminGet,
     AdminSet: AdminSet,
+    UserGet: UserGet,
+    UertSet: UserSet
 }
