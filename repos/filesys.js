@@ -114,11 +114,11 @@ function Init() {
     }
 }
 
-function AdminGet(collectionName) {
+function CollectionGet(collectionName) {
     return new Promise((res, rej) => {
         if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
             fs.readFile(`${db.adminDataFolder}/${collectionName}.json`, (err, data) => {
-                if (err) rej(err);
+                if (err) res({});
                 let record_data = JSON.parse(data);
                 res(record_data);
             });
@@ -129,17 +129,15 @@ function AdminGet(collectionName) {
 }
 
 
-function AdminSet(collectionName, obj) {
-    body._updatedOn = new Date();
+function CollectionSet(collectionName, obj) {
+    obj._updatedOn = new Date();
     return new Promise(async (res, rej) => {
         if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
-            const file = await readfileContent({
-                type,
-                id
-            });
-            let obj = Object.assign({}, file, body);
+            const file = await CollectionGet(collectionName);
+            let _obj = Object.assign({}, file, obj);
+            console.log(_obj);
 
-            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(obj));
+            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(_obj));
 
             res(obj);
         }else {
@@ -168,8 +166,8 @@ module.exports = {
     Create: createFile,
     Update: updateFile,
     Delete: deleteFile,
-    AdminGet: AdminGet,
-    AdminSet: AdminSet,
+    CollectionGet,
+    CollectionSet,
     UserGet: UserGet,
     UertSet: UserSet
 }
