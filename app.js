@@ -4,6 +4,7 @@ const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const middlewares = require('./middlewares/index')
 console.clear();
 
 var methodOverride = require('method-override');
@@ -57,12 +58,14 @@ app.use(methodOverride())
 app.use(errorHandler)
 
 
+log(middlewares.apimiddlewares)
+middlewares.PreLoad(app)
 
 //Admin UI
 app.get("/admin/", AdminCtrol.Index);
 
 //Admin Ctrl
-app.get("/admin/collections/", AdminCtrol.Get);
+app.get("/admin/collections/",  AdminCtrol.Get);
 app.get("/admin/collections/:id", AdminCtrol.GetById);
 app.post("/admin/collections/", AdminCtrol.Post);
 app.put("/admin/collections/:id", AdminCtrol.Put);
@@ -71,14 +74,15 @@ app.put("/admin/collections/:id", AdminCtrol.Put);
 
 //Main Ctrl
 app.get("/", ctrl.Index);
-app.get("/:type/", ctrl.Get);
-app.get("/:type/:id", ctrl.GetById);
-app.post("/:type/", ctrl.Post);
-app.put("/:type/:id", ctrl.Put);
-app.delete("/:type/:id", ctrl.Delete);
+app.get("/:type/", ...middlewares.GET , ctrl.Get);
+app.get("/:type/:id", ...middlewares.GETBYID , ctrl.GetById);
+app.post("/:type/",...middlewares.POST , ctrl.Post);
+app.put("/:type/:id",...middlewares.PUT, ctrl.Put);
+app.delete("/:type/:id",...middlewares.DELETE ,ctrl.Delete);
 
 //Admin Auth
 
+middlewares.PostLoad(app)
 
 app.listen(port, () => {
   log(`Example app listening at http://localhost:${port}`);

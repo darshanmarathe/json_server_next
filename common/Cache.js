@@ -35,10 +35,10 @@ const CollectionList = () => {
 }
 
 
-const Set = (key , value) => {
+const Set = (key , value , ttl = TTL) => {
     
     Cache.set(key, value);
-    log("Cache.set:" , key, value)
+    log("Cache.set:" , key, value , ttl)
     if(key.indexOf('_') > -1)
     {
         Destroy(key.split('_')[0])
