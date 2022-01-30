@@ -16,7 +16,7 @@ const Index = async (req, res) => {
 }
 
 
-const Get = async (req, res) => {
+const Get = async (req, res, next) => {
   if(req.params.type.toUpperCase() === 'FAVICON.ICO') 
   {
         res.send(null);
@@ -27,51 +27,88 @@ const Get = async (req, res) => {
   if(!items){
     items = await repo.GetData(req.params, req.query);
     const { type } = req.params;
-    Cache.Set(type, items); 
+    let {cached , cacheTTL}    =  req[type + "_data"];
+    if(cached) {
+      
+      Cache.Set(type, items, cacheTTL); 
+    }else{
+      Cache.Set(type, items); 
+    }
+  
   }  
   
   res.send(items);
+  next();
 }
-const GetById = async (req, res) => {
+const GetById = async (req, res, next) => {
   let item = await Cache.GetDataById(req.params);
   if(!item){
     item = await repo.GetDataById(req.params);
     const { type, id } = req.params;
-    Cache.Set(`${type}_${id}`, item);
+    let {cached , cacheTTL}    =  req[type + "_data"];
+    if(cached) {
+      
+      Cache.Set(`${type}_${id}`, item , cacheTTL);
+    }else{
+      Cache.Set(`${type}_${id}`, item);
+    }
+   
   }
   if (typeof item === 'object')
     res.send(item);
   else
     res.sendStatus(item);
+
+    next();
 }
-const Post = async (req, res) => {
+const Post = async (req, res, next) => {
   let { type } = req.params;
   try {
     const item = await repo.Create(type, req.body);
     res.send(item);
-    Cache.Set(`${type}_${item._id}`, item);
+    let {cached , cacheTTL}    =  req[type + "_data"];
+    if(cached) {
+      Cache.Set(`${type}_${item._id}`, item, cacheTTL);
+     
+    }else{
+      Cache.Set(`${type}_${item._id}`, item);
+    }
+   
+    
   } catch (error) {
     res.send(error);
   }
+
+  next();
 }
-const Put = async (req, res) => {
+const Put = async (req, res, next) => {
   let { type, id } = req.params;
   if (req.body.id) delete req.body.id;
   try {
     let obj = await repo.Update(type, req.body, id);
-    Cache.Set(`${type}_${id}`, obj);
+    let {cached , cacheTTL}    =  req[type + "_data"];
+    if(cached) {
+      
+      Cache.Set(`${type}_${id}`, obj, cacheTTL);
+    }else{
+
+      Cache.Set(`${type}_${id}`, obj);
+    }
     res.send(obj);
   } catch (error) {
     res.send(error);
   }
+
+  next();
 }
-const Delete = async (req, res) => {
+const Delete = async (req, res, next) => {
   let { type, id } = req.params;
   await repo.Delete(type, id);
   Cache.Destroy(type)
   Cache.Destroy(`${type}_${id}`)
   
   res.send("Deleted.");
+  next();
 }
 
 
