@@ -31,7 +31,7 @@ const Get = async (req, res, next) => {
       return;
     }
   let items = await Cache.GetData(req.params, req.query)
-  console.log(items)
+
   if(!items){
     items = await repo.GetData(req.params, req.query);
     const { type } = req.params;
@@ -44,7 +44,8 @@ const Get = async (req, res, next) => {
     }
   
   }  
-  
+//for post action middlewares
+res.Body = items;  
   res.send(items);
   next();
 }
@@ -63,7 +64,9 @@ const GetById = async (req, res, next) => {
    
   }
   if (typeof item === 'object')
-    res.send(item);
+  {//for post action middlewares
+  res.Body = item;  
+  res.send(item);}
   else
     res.sendStatus(item);
 
@@ -73,6 +76,8 @@ const Post = async (req, res, next) => {
   let { type } = req.params;
   try {
     const item = await repo.Create(type, req.body);
+    //for post action middlewares
+    res.Body = item;
     res.send(item);
     let {cached , cacheTTL}    =  req[type + "_data"];
     if(cached) {
@@ -102,6 +107,8 @@ const Put = async (req, res, next) => {
 
       Cache.Set(`${type}_${id}`, obj);
     }
+    //for post action middlewares
+    res.Body = obj;
     res.send(obj);
   } catch (error) {
     res.send(error);
@@ -114,7 +121,8 @@ const Delete = async (req, res, next) => {
   await repo.Delete(type, id);
   Cache.Destroy(type)
   Cache.Destroy(`${type}_${id}`)
-  
+  //for post action middlewares
+  res.Body = 'Deleted';
   res.send("Deleted.");
   next();
 }

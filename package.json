@@ -5,13 +5,14 @@
   "main": "app.js",
   "scripts": {
     "start": "node app",
-    "watch": "nodemon --ignore 'data/*.json' --ignore 'admin_data/*.json' app",
+    "watch": "nodemon --ignore 'data/*.json' app",
     "watchadm": "nodemon --ignore 'admin_data/*.json' app"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.25.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
