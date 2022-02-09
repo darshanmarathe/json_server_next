@@ -47,7 +47,7 @@ http://localhost:3000/users/1
 
 ## Features
 
-    - Caching layer (ENV: CACHE_TTL=100)
+    - Caching layer (ENV: CACHE_TTL=100, or soon api level)
 
 ## Roadmap
     - RealTime

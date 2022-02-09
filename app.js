@@ -74,11 +74,11 @@ app.put("/admin/collections/:id", AdminCtrol.Put);
 
 //Main Ctrl
 app.get("/", ctrl.Index);
-app.get("/:type/", ...middlewares.GET , ctrl.Get);
-app.get("/:type/:id", ...middlewares.GETBYID , ctrl.GetById);
-app.post("/:type/",...middlewares.POST , ctrl.Post);
-app.put("/:type/:id",...middlewares.PUT, ctrl.Put);
-app.delete("/:type/:id",...middlewares.DELETE ,ctrl.Delete);
+app.get("/:type/", ...middlewares.GET , ctrl.Get, ...middlewares.GETEND);
+app.get("/:type/:id", ...middlewares.GETBYID , ctrl.GetById, ...middlewares.GETBYIDEND);
+app.post("/:type/",...middlewares.POST , ctrl.Post, ...middlewares.POSTEND);
+app.put("/:type/:id",...middlewares.PUT, ctrl.Put , ...middlewares.PUTEND) ;
+app.delete("/:type/:id",...middlewares.DELETE ,ctrl.Delete ,  ...middlewares.DELETEEND);
 
 //Admin Auth
 
