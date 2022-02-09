@@ -5,7 +5,7 @@
   "cached": false,
   "cacheTTL": 10000,
   "rev-proxy": true,
-  "proxys": { "GET": "", "GETBYID": "", "PUT": "", "POST": "", "DELETE": "" },
+  "proxies": { "GET": "http://jsonplaceholder.typicode.com/todos", "GETBYID": "http://jsonplaceholder.typicode.com/todos/:id", "PUT": "https://jsonplaceholder.typicode.com/todos/:id", "POST": "https://jsonplaceholder.typicode.com/todos", "DELETE": "https://jsonplaceholder.typicode.com/todos"  },
   "validations": "function (obj) {return true}",
   "transformation_in": "function (obj) {return obj}",
   "transformation_out": "function (obj) {return obj}",
