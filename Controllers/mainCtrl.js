@@ -12,15 +12,7 @@ const Index = async (req, res) => {
     Cache.Set('collectionList', listOfCollections);
   } 
    
-  listOfCollections = listOfCollections.filter((x) => x.toLowerCase() !== "admin")
-  let html = `
-    <h1> Routes already available</h1>
-    <hr>
-    <ul>
-      ${listOfCollections.map(x => `<li><a href="/${x}">/${x}</a></li>`).join('')}
-    </ul>
-      `
-  res.send(html)
+  res.send(listOfCollections)
 }
 
 
