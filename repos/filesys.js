@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { getPaginatedItems, UUID } = require('../common/index');
-
+const GetDefaultScrema = require('../common/collectionAttribute')
 var db = {};
 function createFile(type, body) {
     let item = body;
@@ -123,7 +123,7 @@ function CollectionGet(collectionName) {
                 res(record_data);
             });
         } else {
-            return res(404)
+            return res(GetDefaultScrema(collectionName))
         }
     });
 }

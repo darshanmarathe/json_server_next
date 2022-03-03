@@ -3,7 +3,7 @@ function GetDefaultScrema(collectionName) {
         "name": collectionName,
         "secured": false,
         "rev-proxy": false,
-        "proxys": {
+        "proxies": {
           "get": "",
           "put": "",
           "post": "",
