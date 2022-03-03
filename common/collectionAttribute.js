@@ -5,6 +5,7 @@ function GetDefaultScrema(collectionName) {
         "rev-proxy": false,
         "proxies": {
           "GET": "",
+          "GETBYID" : "",
           "PUT": "",
           "POST": "",
           "DELETE": ""
