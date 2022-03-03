@@ -4,10 +4,10 @@ function GetDefaultScrema(collectionName) {
         "secured": false,
         "rev-proxy": false,
         "proxies": {
-          "get": "",
-          "put": "",
-          "post": "",
-          "delete": ""
+          "GET": "",
+          "PUT": "",
+          "POST": "",
+          "DELETE": ""
         },
         "validations": "function (obj) {return true}",
         "transformation_in": "function (obj) {return obj}",
@@ -16,9 +16,9 @@ function GetDefaultScrema(collectionName) {
           "provider": "RabbitMQ/Kafka/Azure/SNS"
         },
         "WebHooks": {
-          "put": "",
-          "post": "",
-          "delete": ""
+          "PUT": "",
+          "POST": "",
+          "DELETE": ""
         },
         "schemna": {},
         "users": []
