@@ -48,6 +48,7 @@ http://localhost:3000/users/1
 ## Features
 
     - Caching layer (ENV: CACHE_TTL=100, or soon api level)
+    - Reverse Proxy
 
 ## Roadmap
     - RealTime
@@ -59,7 +60,6 @@ http://localhost:3000/users/1
     - Webhook
     - security (JWT)
     - clients (client keys)
-    - Reverse Proxy
     - schemas
     - headless cms
     - GraphQL (When schema available)
