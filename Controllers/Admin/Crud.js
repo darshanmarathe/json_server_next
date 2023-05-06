@@ -5,7 +5,7 @@ const Init = async (_repo) => {
   repo = _repo;
 }
 const Index = async (req, res) => {
-
+  res.send("Admin UI in the makes")
 }
 const Get = async (req, res) => {
   let listOfCollections = await repo.CollectionList();
