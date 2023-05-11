@@ -14,13 +14,14 @@ const fixURL = (URL , id) => URL.indexOf(':id') > -1 ? URL.replace(/:id/g, id) :
 async function POST(req, res,next) {
     const data = GetData(req);
     if(data == null) next();
+    console.dir(data)
     let {POST}  = data.webhooks
     console.log("WebHook POST CALLED" , POST);
     if(validUrl(POST)) {
         console.log("POST" ,POST , res.Body)
         axios.post(POST, res.Body).catch(function (error) {console.log(error);});
     }
-    next();    
+    next();
 }
 
 async function PUT(req, res,next) {
@@ -54,7 +55,7 @@ async function DELETE(req, res,next) {
 
 
 module.exports =  {
-    POST, 
-    PUT, 
+    POST,
+    PUT,
     DELETE
 }

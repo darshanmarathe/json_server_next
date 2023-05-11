@@ -14,7 +14,7 @@
   "queue" : {
     "provider": "RabbitMQ/Kafka/Azure/SNS"
   },
-  "WebHooks": {
+  "webHooks": {
     "put": "",
     "post": "",
     "delete": ""

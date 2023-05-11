@@ -41,7 +41,11 @@ function updateFile(type, body, id) {
 }
 
 function deleteFile(type, id) {
-    fs.unlinkSync(`${db.dataFolder}/${type}/${id}.json`);
+    try {
+        fs.unlinkSync(`${db.dataFolder}/${type}/${id}.json`);
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 function readFolderContent({

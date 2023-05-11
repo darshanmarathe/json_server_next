@@ -16,7 +16,7 @@ function GetDefaultScrema(collectionName) {
         "queue" : {
           "provider": "RabbitMQ/Kafka/Azure/SNS"
         },
-        "WebHooks": {
+        "webhooks": {
           "PUT": "",
           "POST": "",
           "DELETE": ""
