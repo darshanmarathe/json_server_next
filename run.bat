@@ -6,8 +6,11 @@ set CONNECTION_STRING=postgres://ykqeaogj:ZeEjD72l6u0rNoL0uCdrygBijRc_SpPH@rosie
 set CACHE_TTL=100
 set PORT=4000
 npm run watch
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> Admin
 
 
 
