@@ -28,4 +28,25 @@ function GetDefaultScrema(collectionName) {
 }
 
 
-module.exports =  GetDefaultScrema;
+function GetAdminUser() {
+  return {
+    "username": "admin",
+    "password": "1234",
+    "apikeys": [
+        ""
+    ],
+    "isAdmin": true,
+    "auther": [
+        "*"
+    ],
+    "config": [
+        "*"
+    ]
+}
+}
+
+
+module.exports =  {
+  GetDefaultScrema,
+  GetAdminUser
+};

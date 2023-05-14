@@ -33,6 +33,7 @@ if (!repo.Init()) {
   process.exit(1)
 }
 
+repo.BootTasks();
 
 ctrl.Init(repo, _cache);
 AdminCtrol.Init(repo);
@@ -63,6 +64,8 @@ middlewares.PreLoad(app)
 
 //Admin UI
 app.get("/admin/", AdminCtrol.Index);
+app.post("/admin/auth" , AdminCtrol.Auth)
+app.post("/admin/user" , AdminCtrol.SaveUser)
 
 //Admin Ctrl
 app.get("/admin/collections/",  AdminCtrol.Get);

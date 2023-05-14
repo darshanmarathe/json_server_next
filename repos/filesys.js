@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { getPaginatedItems, UUID } = require('../common/index');
-const GetDefaultScrema = require('../common/collectionAttribute')
+const {GetDefaultScrema , GetAdminUser} = require('../common/collectionAttribute')
 
 //Added now 
 
@@ -109,8 +109,11 @@ function CollectionList() {
 
 function Init() {
     try {
-        db.dataFolder = process.env.DATA_FOLDER || './data';
-        db.adminDataFolder = process.env.ADMIN_DATA_FOLDER || './admin_data';
+        db.dataFolder = process.env.DATA_FOLDER ||  '.\\data';
+        db.adminDataFolder = process.env.ADMIN_DATA_FOLDER ||   '.\\admin_data';
+        db.collectionMetadataFolder =  db.adminDataFolder + "\\collections"
+        db.usersMetadataFolder =  db.adminDataFolder + "\\users"
+        
         console.log('Data Folder Selected : ', db.dataFolder, db.adminDataFolder)
         fs.existsSync(db.dataFolder) || fs.mkdirSync(db.dataFolder);
         fs.existsSync(db.adminDataFolder) || fs.mkdirSync(db.adminDataFolder);
@@ -123,8 +126,8 @@ function Init() {
 
 function CollectionGet(collectionName) {
     return new Promise((res, rej) => {
-        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
-            fs.readFile(`${db.adminDataFolder}/${collectionName}.json`, (err, data) => {
+        if (fs.existsSync(`${db.collectionMetadataFolder}/${collectionName}.json`)) {
+            fs.readFile(`${db.collectionMetadataFolder}/${collectionName}.json`, (err, data) => {
                 if (err) res({});
                 let record_data = JSON.parse(data);
                 res(record_data);
@@ -136,19 +139,20 @@ function CollectionGet(collectionName) {
 }
 
 
+
 function CollectionSet(collectionName, obj) {
     obj._updatedOn = new Date();
     return new Promise(async (res, rej) => {
-        if (fs.existsSync(`${db.adminDataFolder}/${collectionName}.json`)) {
+        if (fs.existsSync(`${db.collectionMetadataFolder}/${collectionName}.json`)) {
             const file = await CollectionGet(collectionName);
             let _obj = Object.assign({}, file, obj);
             console.log(_obj);
 
-            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(_obj));
+            fs.writeFileSync(`${db.collectionMetadataFolder}/${collectionName}.json`, JSON.stringify(_obj));
 
             res(obj);
         }else {
-            fs.writeFileSync(`${db.adminDataFolder}/${collectionName}.json`, JSON.stringify(obj));
+            fs.writeFileSync(`${db.collectionMetadataFolder}/${collectionName}.json`, JSON.stringify(obj));
             res(obj)
         }
 
@@ -156,12 +160,53 @@ function CollectionSet(collectionName, obj) {
     });
 }
 
-function UserGet(username) {
-
+function GetUser(username) {
+    console.log(username);
+    return new Promise((res, rej) => {
+        console.log(`${db.usersMetadataFolder}\\${username}.json`);
+        if (fs.existsSync(`${db.usersMetadataFolder}\\${username}.json`)) {
+            fs.readFile(`${db.usersMetadataFolder}\\${username}.json`, (err, data) => {
+                if (err) res({});
+                let record_data = JSON.parse(data);
+                console.log("Yess. file exist", record_data)
+                res(record_data);
+            });
+        } else {
+            rej("user not found...")
+        }
+    });
 }
 
-function UserSet(userObj) {
-    
+function SetUser(username , userObj) {
+    userObj._updatedOn = new Date();
+    return new Promise(async (res, rej) => {
+        if (fs.existsSync(`${db.usersMetadataFolder}/${username}.json`)) {
+            const file = await CollectionGet(username);
+            let _obj = Object.assign({}, file, userObj);
+            console.log(_obj);
+
+            fs.writeFileSync(`${db.usersMetadataFolder}/${username}.json`, JSON.stringify(_obj));
+
+            res(obj);
+        }else {
+            fs.writeFileSync(`${db.usersMetadataFolder}/${username}.json`, JSON.stringify(userObj));
+            res(obj)
+        }
+
+       
+    });
+}
+
+
+const BootTasks = async () => {
+    const username  = 'admin';
+    const userObj = GetAdminUser();
+    if (fs.existsSync(`${db.usersMetadataFolder}/${username}.json`)) {
+        return true
+    }else {
+        fs.writeFileSync(`${db.usersMetadataFolder}/${username}.json`, JSON.stringify(userObj));
+        return true
+    }
 }
 
 
@@ -175,6 +220,7 @@ module.exports = {
     Delete: deleteFile,
     CollectionGet,
     CollectionSet,
-    UserGet: UserGet,
-    UertSet: UserSet
+    GetUser,
+    SetUser,
+    BootTasks
 }
