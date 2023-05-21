@@ -1,4 +1,5 @@
 var repo = null
+const jwt = require("jsonwebtoken");
 
 const collectionModel = require("../../common/collectionAttribute")
 const Init = async (_repo) => {
@@ -39,7 +40,10 @@ const Auth = async (req , res , next) => {
   const user = await repo.GetUser(userName);
   if(user.password === password){
     delete user.password;
-   res.send(user)
+    const token = jwt.sign(user, process.env.MY_SECRET || 'MySuperKey', { expiresIn: "1h" });
+
+    res.cookie("token", token);
+    res.send({user , token})
   }else{
     res.status(401).send({
       error : 'Auth failed'
