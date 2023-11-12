@@ -15,7 +15,6 @@ function GetData(req) {
 const GET = async (req, res, next) => {
     const data = GetData(req);
     const { "rev-proxy": RevProxy } = data;
-    console.log(RevProxy, "RevProxy");
     if (RevProxy !== true) {
         next();
         return;

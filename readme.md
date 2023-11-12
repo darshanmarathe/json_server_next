@@ -51,6 +51,7 @@ http://localhost:3000/users/1
     - Reverse Proxy
 
 ## Roadmap
+    - Special routes
     - RealTime
     - admin Area service
     - admin panel

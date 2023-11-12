@@ -4,6 +4,7 @@ const Cache = require("./cache");
 const revProxy = require("./rev-proxy");
 const WebHooks = require("./webhooks")
 function PreLoad(app) {
+  console.clear();
   app.use([logger]);
 }
 

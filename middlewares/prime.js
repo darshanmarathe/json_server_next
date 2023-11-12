@@ -7,7 +7,9 @@ const repo = function () {
   
 
 function Prime(req, res, next) {
-    let type= req.params.type;
+  console.clear();
+
+  let type= req.params.type;
      if(type === undefined) next();
      repo.CollectionGet(type).then(data => {
         req[type + "_data"] = data;
