@@ -40,13 +40,14 @@ AdminCtrol.Init(repo);
 
 function errorHandler(err, req, res, next) {
   if (res.headersSent) {
+    console.log(err)
     return next(err)
   }
   res.sendStatus(500)
 }
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(
   bodyParser.json({
@@ -58,8 +59,9 @@ app.use(methodOverride())
 app.use(errorHandler)
 
 
-log(middlewares.apimiddlewares)
+
 middlewares.PreLoad(app)
+log(AdminCtrol)
 
 //Admin UI
 app.get("/admin/", AdminCtrol.Index);
@@ -71,6 +73,8 @@ app.post("/admin/collections/", AdminCtrol.Post);
 app.put("/admin/collections/:id", AdminCtrol.Put);
 
 
+//Admin Auth
+
 
 //Main Ctrl
 app.get("/", ctrl.Index);
@@ -80,7 +84,6 @@ app.post("/:type/",...middlewares.POST , ctrl.Post, ...middlewares.POSTEND);
 app.put("/:type/:id",...middlewares.PUT, ctrl.Put , ...middlewares.PUTEND) ;
 app.delete("/:type/:id",...middlewares.DELETE ,ctrl.Delete ,  ...middlewares.DELETEEND);
 
-//Admin Auth
 
 middlewares.PostLoad(app)
 
