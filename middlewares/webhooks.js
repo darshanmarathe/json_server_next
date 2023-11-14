@@ -18,8 +18,8 @@ async function POST(req, res,next) {
     let {POST}  = data.webhooks
     console.log("WebHook POST CALLED" , POST);
     if(validUrl(POST)) {
-        console.log("POST" ,POST , res.Body)
-        axios.post(POST, res.Body).catch(function (error) {console.log(error);});
+        console.log("POST" ,POST , req.body)
+        axios.post(POST, req.body).catch(function (error) {console.log(error);});
     }
     next();
 }
