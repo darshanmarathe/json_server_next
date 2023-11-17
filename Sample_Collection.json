@@ -2,6 +2,7 @@
   "name": "todos",
   "secured": true,
   "rev-proxy": true,
+  "realtime" : false,
   "proxys": {
     "get": "",
     "put": "",

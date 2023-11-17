@@ -23,7 +23,8 @@
     "nedb": "^1.8.0",
     "node-cache": "^5.1.2",
     "postgres": "^3.3.4",
-    "redis": "^4.6.6"
+    "redis": "^4.6.6",
+    "socket.io": "^4.7.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

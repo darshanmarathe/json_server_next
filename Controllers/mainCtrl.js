@@ -1,5 +1,6 @@
 var repo = null;
-var Cache = null
+var Cache = null;
+const path = require('path')
 const Init = (_repo, _cache) => {
   repo = _repo;
   Cache = _cache;
@@ -13,6 +14,12 @@ const Index = async (req, res) => {
   }
 
   res.send(listOfCollections)
+}
+
+
+
+const Realtime = async (req, res) => {
+  res.sendFile(path.join(__dirname, '../realtime/index.html'));
 }
 
 
@@ -132,5 +139,6 @@ module.exports = {
   GetById,
   Post,
   Put,
-  Delete
+  Delete,
+  Realtime
 }

@@ -1,11 +1,22 @@
 "use strict";
+const { InitSoket } = require("./socket.js");
 const log = console.log;
 const fs = require("fs");
 const express = require("express");
+
+const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const middlewares = require('./middlewares/index')
+const middlewares = require('./middlewares/index');
+
 console.clear();
+
+const server = require('http').createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+InitSoket(io, app)
+
 
 var methodOverride = require('method-override');
 var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
@@ -46,7 +57,6 @@ function errorHandler(err, req, res, next) {
   res.sendStatus(500)
 }
 
-const app = express();
 const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(
@@ -63,8 +73,12 @@ app.use(errorHandler)
 middlewares.PreLoad(app)
 log(AdminCtrol)
 
+
+app.get('/realtime/' , )
+
 //Admin UI
 app.get("/admin/", AdminCtrol.Index);
+app.get("/realtime/" , ctrl.Realtime)
 
 //Admin Ctrl
 app.get("/admin/collections/",  AdminCtrol.Get);
