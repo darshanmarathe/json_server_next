@@ -1,8 +1,10 @@
 
 const InitSoket = function (io, app) {
-    Socket = io;
+    
     app.set('socketio', io);
-
+    io.on('connection', (socket) => { 
+        console.log('connected....')
+    })
 
 };
 

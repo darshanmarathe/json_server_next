@@ -1,5 +1,4 @@
 "use strict";
-const { InitSoket } = require("./socket.js");
 const log = console.log;
 const fs = require("fs");
 const express = require("express");
@@ -12,11 +11,8 @@ const middlewares = require('./middlewares/index');
 console.clear();
 
 const server = require('http').createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
 
-InitSoket(io, app)
-
+var io = require('socket.io')(server);
 
 var methodOverride = require('method-override');
 var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
@@ -74,7 +70,6 @@ middlewares.PreLoad(app)
 log(AdminCtrol)
 
 
-app.get('/realtime/' , )
 
 //Admin UI
 app.get("/admin/", AdminCtrol.Index);
@@ -90,17 +85,26 @@ app.put("/admin/collections/:id", AdminCtrol.Put);
 //Admin Auth
 
 
+
 //Main Ctrl
-app.get("/", ctrl.Index);
-app.get("/:type/", ...middlewares.GET , ctrl.Get, ...middlewares.GETEND);
-app.get("/:type/:id", ...middlewares.GETBYID , ctrl.GetById, ...middlewares.GETBYIDEND);
-app.post("/:type/",...middlewares.POST , ctrl.Post, ...middlewares.POSTEND);
-app.put("/:type/:id",...middlewares.PUT, ctrl.Put , ...middlewares.PUTEND) ;
-app.delete("/:type/:id",...middlewares.DELETE ,ctrl.Delete ,  ...middlewares.DELETEEND);
+app.get("/rest/", ctrl.Index);
+app.get("/rest/:type/", ...middlewares.GET , ctrl.Get, ...middlewares.GETEND);
+app.get("/rest/:type/:id", ...middlewares.GETBYID , ctrl.GetById, ...middlewares.GETBYIDEND);
+app.post("/rest/:type/",...middlewares.POST , ctrl.Post, ...middlewares.POSTEND);
+app.put("/rest/:type/:id",...middlewares.PUT, ctrl.Put , ...middlewares.PUTEND) ;
+app.delete("/rest/:type/:id",...middlewares.DELETE ,ctrl.Delete ,  ...middlewares.DELETEEND);
 
 
 middlewares.PostLoad(app)
 
-app.listen(port, () => {
+
+app.set('socketio', io);
+io.on('connection', (socket) => { 
+    console.log('connected....', socket)
+})
+
+
+server.listen(port, () => {
   log(`Example app listening at http://localhost:${port}`);
 });
+
