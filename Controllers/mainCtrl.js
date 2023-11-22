@@ -91,16 +91,19 @@ const Post = async (req, res, next) => {
   try {
     const item = await repo.Create(type, req.body);
     //for post action middlewares
-    res.Body = item;
-    res.send(item);
-    let { cached, cacheTTL } = req[type + "_data"];
+    
+    let { cached, cacheTTL , hypermedia} = req[type + "_data"];
+    if(hypermedia){
+      GETBYID(type, item)
+    }
     if (cached) {
       Cache.Set(`${type}_${item._id}`, item, cacheTTL);
-
+      
     } else {
       Cache.Set(`${type}_${item._id}`, item);
     }
-
+    res.Body = item;
+    res.send(item);
 
   } catch (error) {
     res.send(error);
@@ -113,7 +116,10 @@ const Put = async (req, res, next) => {
   if (req.body.id) delete req.body.id;
   try {
     let obj = await repo.Update(type, req.body, id);
-    let { cached, cacheTTL } = req[type + "_data"];
+    let { cached, cacheTTL, hypermedia } = req[type + "_data"];
+    if(hypermedia){
+      GETBYID(type, obj)
+    }
     if (cached) {
 
       Cache.Set(`${type}_${id}`, obj, cacheTTL);
