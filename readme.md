@@ -49,16 +49,16 @@ http://localhost:3000/users/1
 
     - Caching layer (ENV: CACHE_TTL=100, or soon api level)
     - Reverse Proxy
+    - Webhooks
+    - RealTime  /Realtime Implemented with socket.io
 
 ## Roadmap
+    - validations
     - Special routes
-    - RealTime
     - admin Area service
     - admin panel
     - Hypermedia API
-    - validations
     - transformations
-    - Webhook
     - security (JWT)
     - clients (client keys)
     - schemas
