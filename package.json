@@ -1,12 +1,12 @@
 {
-  "name": "minServ",
-  "version": "1.0.0",
-  "description": "",
+  "name": "json_server_max",
+  "version": "1.0.1",
+  "description": "JSON Server on steroids",
   "main": "app.js",
   "scripts": {
     "start": "node app",
     "watch": "nodemon --ignore 'data/*.json' app",
-    "watchadm": "nodemon --ignore 'admin_data/*.json' app"
+    "watchadmin": "nodemon --ignore 'admin_data/*.json' app"
   },
   "keywords": [],
   "author": "",
