@@ -6,6 +6,8 @@ const Init = (_repo, _cache) => {
   Cache = _cache;
 }
 
+const {GET , GETBYID} = require('../common/Hypermedia')
+
 const Index = async (req, res) => {
   let listOfCollections = Cache.CollectionList();
   if (!listOfCollections) {
@@ -34,7 +36,10 @@ const Get = async (req, res, next) => {
   if (!items) {
     items = await repo.GetData(req.params, req.query);
     const { type } = req.params;
-    let { cached, cacheTTL } = req[type + "_data"];
+    let { cached, cacheTTL , hypermedia } = req[type + "_data"];
+    if (hypermedia) {
+      items = GET(type , items);
+    }
     if (cached) {
 
       Cache.Set(type, items, cacheTTL);
@@ -45,6 +50,7 @@ const Get = async (req, res, next) => {
   } else {
     console.log("retrived from cache");
   }
+  
   //for post action middlewares
   res.Body = items;
   res.send(items);
@@ -54,8 +60,12 @@ const GetById = async (req, res, next) => {
   let item = await Cache.GetDataById(req.params);
   if (!item) {
     item = await repo.GetDataById(req.params);
+    
     const { type, id } = req.params;
-    let { cached, cacheTTL } = req[type + "_data"];
+    let { cached, cacheTTL , hypermedia } = req[type + "_data"];
+    if(hypermedia){
+      item = GETBYID(type, item)
+    }
     if (cached) {
 
       Cache.Set(`${type}_${id}`, item, cacheTTL);
@@ -67,6 +77,7 @@ const GetById = async (req, res, next) => {
     console.log("retrived from cache");
   }
   if (typeof item === 'object') {//for post action middlewares
+    
     res.Body = item;
     res.send(item);
   }

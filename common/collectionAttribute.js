@@ -3,6 +3,8 @@ function GetDefaultScrema(collectionName) {
         "name": collectionName,
         "secured": false,
         "rev-proxy": false,
+        'realtime': false ,
+        'hypermedia': false,
         "proxies": {
           "GET": "",
           "GETBYID" : "",
