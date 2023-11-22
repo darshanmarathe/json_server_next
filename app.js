@@ -100,7 +100,7 @@ middlewares.PostLoad(app)
 
 app.set('socketio', io);
 io.on('connection', (socket) => { 
-    console.log('connected....', socket)
+    console.log('connected....', socket.id)
 })
 
 
