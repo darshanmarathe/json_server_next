@@ -8,6 +8,8 @@ lerna-debug.log*
 
 data/*
 admin_data/*
+.idea/*
+
 
 !data
 !admin_data
