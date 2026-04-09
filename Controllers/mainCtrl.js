@@ -1,6 +1,7 @@
 var repo = null;
 var Cache = null;
 const path = require('path')
+const { applyQueryOptions } = require('../common/queryEngine')
 const Init = (_repo, _cache) => {
   repo = _repo;
   Cache = _cache;
@@ -12,6 +13,10 @@ const normalizeGetById = (item) => {
   if (Array.isArray(item)) return item[0] || null;
   return item;
 }
+
+const deepClone = (value) => JSON.parse(JSON.stringify(value));
+const hasQueryParams = (query) =>
+  query && typeof query === "object" && Object.keys(query).length > 0;
 
 const Index = async (req, res) => {
   let listOfCollections = Cache.CollectionList();
@@ -36,24 +41,52 @@ const Get = async (req, res, next) => {
     res.send(null);
     return;
   }
-  let items = await Cache.GetData(req.params, req.query)
+  const { type } = req.params;
+  const query = req.query || {};
+  let residualQuery = query;
+  let items = null;
+  let { cached, cacheTTL , hypermedia } = req[type + "_data"];
+
+  if (hasQueryParams(query) && typeof repo.GetDataWithQuery === "function") {
+    try {
+      const pushed = await repo.GetDataWithQuery(req.params, query);
+      if (pushed && Array.isArray(pushed.items)) {
+        items = pushed.items;
+        residualQuery = pushed.residualQuery || {};
+      }
+    } catch (error) {
+      console.log("query pushdown failed", error && error.message ? error.message : error);
+    }
+  }
 
   if (!items) {
-    items = await repo.GetData(req.params, req.query);
-    const { type } = req.params;
-    let { cached, cacheTTL , hypermedia } = req[type + "_data"];
-    if (hypermedia) {
-      items = GET(type , items);
-    }
-    if (cached) {
-
-      Cache.Set(type, items, cacheTTL);
+    items = await Cache.GetData(req.params, {})
+    if (!items) {
+      items = await repo.GetData(req.params, {});
+      if (cached) {
+        Cache.Set(type, items, cacheTTL);
+      } else {
+        Cache.Set(type, items);
+      }
     } else {
-      Cache.Set(type, items);
+      console.log("retrived from cache");
     }
+  }
 
-  } else {
-    console.log("retrived from cache");
+  items = await applyQueryOptions(items, residualQuery, {
+    parentType: type,
+    fetchCollectionData: async (embedType) => {
+      let relatedItems = await Cache.GetData({ type: embedType }, {});
+      if (!relatedItems) {
+        relatedItems = await repo.GetData({ type: embedType }, {});
+        Cache.Set(embedType, relatedItems);
+      }
+      return Array.isArray(relatedItems) ? deepClone(relatedItems) : [];
+    },
+  });
+
+  if (hypermedia) {
+    items = GET(type , items);
   }
   
   //for post action middlewares

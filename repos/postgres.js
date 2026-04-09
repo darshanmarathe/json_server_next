@@ -2,10 +2,13 @@ const {
     getPaginatedItems
 } = require('../common/index');
 const postgres = require('postgres')
+const { buildSqlPushdown } = require('../common/queryPushdown');
 
 const url = process.env.CONNECTION_STRING || 'postgresql://localhost:5432';
 let tables = []
 let sql = null;
+const Santize = (param = '') =>
+    String(param).replace(/[^a-zA-Z0-9_]/g, '');
 var initDb = async (collectionName) => {
     if (!tables.includes(collectionName)) {
         await createTable(collectionName)
@@ -14,7 +17,7 @@ var initDb = async (collectionName) => {
 }
 
 
-const getTableName = (tableName) => "MJS_" + tableName.toUpperCase();
+const getTableName = (tableName) => "MJS_" + Santize(tableName).toUpperCase();
 var createTable = async (tableName) => {
     if (tableName === '') return;
     let _tableName = getTableName(tableName);
@@ -29,6 +32,22 @@ var createTable = async (tableName) => {
         document JSON
      );`
 
+}
+
+const parseDocument = (row) => {
+    let document = row.document;
+    if (typeof document === "string") {
+        try {
+            document = JSON.parse(document);
+        } catch {
+            document = {};
+        }
+    }
+    document = document || {};
+    return {
+        ...document,
+        _id: row._id
+    };
 }
 
 const Init = async () => {
@@ -55,12 +74,7 @@ const GetData = ({
 console.log(query)
     return new Promise((res, rej) => {
         sql `SELECT * FROM ${ sql(_tableName) }`.then(results => {
-           let unpaged =results.map(x => {
-            return {
-                ...x.document,
-                _id: x._id
-            }
-        });
+           let unpaged =results.map(parseDocument);
 
             res(getPaginatedItems(unpaged , query))
         });
@@ -79,15 +93,34 @@ const GetDataById = ({
         sql `SELECT * FROM ${ sql(_tableName) } 
         where _id::text = ${ sql(id).first}`.then(results => {
 
-            res(results.map(x => {
-                return {
-                    ...x.document,
-                    _id: x._id
-                }
-            }))
+            res(results.map(parseDocument))
         });
 
     });
+}
+const GetDataWithQuery = async ({ type }, query) => {
+    await initDb(type);
+    const _tableName = getTableName(type);
+    const plan = buildSqlPushdown(query, { dialect: "postgres" });
+
+    let queryText = `SELECT * FROM "${_tableName}"`;
+    if (plan.where) {
+        queryText += ` WHERE ${plan.where}`;
+    }
+    if (plan.orderBy) {
+        queryText += ` ORDER BY ${plan.orderBy}`;
+    }
+    if (plan.limit !== null && plan.limit !== undefined) {
+        queryText += ` LIMIT ${parseInt(plan.limit, 10)}`;
+        const offset = parseInt(plan.offset || 0, 10);
+        queryText += ` OFFSET ${offset}`;
+    }
+
+    const results = await sql.unsafe(queryText);
+    return {
+        items: results.map(parseDocument),
+        residualQuery: plan.residualQuery,
+    };
 }
 const CollectionList = async () => {
     let results = await sql `SELECT *
@@ -147,6 +180,7 @@ const Delete = (type, id) => {
 module.exports = {
     Init,
     GetData,
+    GetDataWithQuery,
     GetDataById,
     CollectionList,
     Create,
