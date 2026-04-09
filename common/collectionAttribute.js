@@ -9,6 +9,7 @@ function GetDefaultScrema(collectionName) {
           "GET": "",
           "GETBYID" : "",
           "PUT": "",
+          "PATCH": "",
           "POST": "",
           "DELETE": ""
         },
@@ -20,6 +21,7 @@ function GetDefaultScrema(collectionName) {
         },
         "webhooks": {
           "PUT": "",
+          "PATCH": "",
           "POST": "",
           "DELETE": ""
         },

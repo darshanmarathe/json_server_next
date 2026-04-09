@@ -92,6 +92,7 @@ app.get("/rest/:type/", ...middlewares.GET , ctrl.Get, ...middlewares.GETEND);
 app.get("/rest/:type/:id", ...middlewares.GETBYID , ctrl.GetById, ...middlewares.GETBYIDEND);
 app.post("/rest/:type/",...middlewares.POST , ctrl.Post, ...middlewares.POSTEND);
 app.put("/rest/:type/:id",...middlewares.PUT, ctrl.Put , ...middlewares.PUTEND) ;
+app.patch("/rest/:type/:id",...middlewares.PATCH, ctrl.Patch , ...middlewares.PATCHEND) ;
 app.delete("/rest/:type/:id",...middlewares.DELETE ,ctrl.Delete ,  ...middlewares.DELETEEND);
 
 

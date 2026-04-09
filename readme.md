@@ -25,6 +25,9 @@ http://localhost:3000/rest/users/ // body as json
 Put
 http://localhost:3000/rest/users/1 // body as json
 
+Patch
+http://localhost:3000/rest/users/1 // body as partial json
+
 Delete
 http://localhost:3000/rest/users/1
 

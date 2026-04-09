@@ -10,6 +10,7 @@ const GETBYID = function (type, item) {
   const links = [
     { rel: "self", href: `/rest/${type}/${item._id}`, method: "GET" },
     { rel: "update", href: `/rest/${type}/${item._id}`, method: "PUT" },
+    { rel: "patch", href: `/rest/${type}/${item._id}`, method: "PATCH" },
     { rel: "delete", href: `/rest/${type}/${item._id}`, method: "DELETE" },
     { rel: type, href: `/rest/${type}`, method: "GET" },
   ];

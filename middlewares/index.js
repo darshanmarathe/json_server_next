@@ -21,6 +21,8 @@ module.exports = {
   POSTEND: [WebHooks.POST , realtime.POST],
   PUT: [Prime, revProxy.PUT,],
   PUTEND: [WebHooks.PUT , realtime.PUT],
+  PATCH: [Prime, revProxy.PATCH,],
+  PATCHEND: [WebHooks.PATCH , realtime.PATCH],
   DELETE: [Prime, revProxy.DELETE,],
   DELETEEND: [WebHooks.DELETE , realtime.DELETE],
   PostLoad,

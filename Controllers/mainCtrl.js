@@ -8,6 +8,11 @@ const Init = (_repo, _cache) => {
 
 const {GET , GETBYID} = require('../common/Hypermedia')
 
+const normalizeGetById = (item) => {
+  if (Array.isArray(item)) return item[0] || null;
+  return item;
+}
+
 const Index = async (req, res) => {
   let listOfCollections = Cache.CollectionList();
   if (!listOfCollections) {
@@ -136,6 +141,44 @@ const Put = async (req, res, next) => {
 
   next();
 }
+const Patch = async (req, res, next) => {
+  let { type, id } = req.params;
+  if (req.body.id) delete req.body.id;
+  if (req.body._id) delete req.body._id;
+
+  try {
+    let current = await repo.GetDataById({ type, id });
+    current = normalizeGetById(current);
+
+    if (!current || current === 404) {
+      res.sendStatus(404);
+      next();
+      return;
+    }
+
+    const merged = Object.assign({}, current, req.body);
+    let obj = await repo.Update(type, merged, id);
+    obj = obj || merged;
+
+    let { cached, cacheTTL, hypermedia } = req[type + "_data"];
+    if (hypermedia) {
+      GETBYID(type, obj)
+    }
+    if (cached) {
+      Cache.Set(`${type}_${id}`, obj, cacheTTL);
+    } else {
+      Cache.Set(`${type}_${id}`, obj);
+    }
+
+    //for post action middlewares
+    res.Body = obj;
+    res.send(obj);
+  } catch (error) {
+    res.send(error);
+  }
+
+  next();
+}
 const Delete = async (req, res, next) => {
   let { type, id } = req.params;
   await repo.Delete(type, id);
@@ -156,6 +199,7 @@ module.exports = {
   GetById,
   Post,
   Put,
+  Patch,
   Delete,
   Realtime
 }
