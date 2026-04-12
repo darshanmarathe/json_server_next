@@ -1,40 +1,35 @@
 # syntax=docker/dockerfile:1
 
-# Base image (Debian slim)
-FROM node:20-slim AS base
+FROM node:20-slim AS deps
 WORKDIR /usr/src/app
 ENV NODE_ENV=production \
     CI=true
 
-# Dependencies layer (cache-friendly)
-FROM base AS deps
 COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --omit=dev && npm cache clean --force
 
-# Build layer (for TS/Build steps; safe if none)
-FROM deps AS build
-COPY . .
-RUN npm run build --if-present
-
-# Runtime image (small, non-root)
 FROM node:20-slim AS runtime
-ENV NODE_ENV=production
 WORKDIR /usr/src/app
+ENV NODE_ENV=production \
+    PORT=4000
 
-# Install only production deps
-COPY package*.json ./
-RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev
+COPY --from=deps --chown=node:node /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node package*.json ./
+COPY --chown=node:node . .
 
-# Copy application (including any build artifacts)
-COPY --from=build /usr/src/app ./
+# Ensure writable folders for filesys/sqlite providers when running as non-root.
+RUN mkdir -p /usr/src/app/data /usr/src/app/admin_data \
+    && chown -R node:node /usr/src/app/data /usr/src/app/admin_data
 
-# Run as non-root user provided by the Node image
 USER node
+EXPOSE 4000
 
-# Default port (override with -e PORT=xxxx)
-EXPOSE 3000
+VOLUME ["/usr/src/app/data", "/usr/src/app/admin_data"]
 
-# Start the app (expects an npm start script)
-CMD ["npm", "start"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD node -e "fetch(`http://127.0.0.1:${process.env.PORT || 4000}/rest/`).then((r)=>process.exit(r.ok ? 0 : 1)).catch(()=>process.exit(1))"
+
+CMD ["node", "app.js"]
 
 

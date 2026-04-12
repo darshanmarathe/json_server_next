@@ -10,6 +10,7 @@
 
 # ChangeLog
 
+- 2026-04-12: Improved Docker packaging with lean production dependency install (`npm ci --omit=dev`), corrected container port to `4000`, non-root writable `data/admin_data` setup, healthcheck, persistent volumes, and new `.dockerignore` to reduce build context.
 - 2026-04-12: Fixed SQLite `Create`/`Update` body handling so missing or invalid bodies no longer crash, `Create` now always persists with generated GUID `_id` and auto `_createdOn`, and `Update` safely normalizes input with `_updatedOn`.
 - 2026-04-09: Added API `PATCH /rest/:type/:id` capability with partial-update merge in main controller, middleware pipeline hooks (`rev-proxy`, `webhooks`, `realtime`), default collection schema support for PATCH endpoints, and hypermedia/readme updates.
 - 2026-04-09: Added advanced list query support on `GET /rest/:type/` for condition filters (`field:op=value` such as `views:gt=100`), sort (`_sort=-field`), pagination alias (`_page` + `_per_page`), embedding (`_embed=collection` using `<parent>Id` links), and complex JSON `_where` expressions with `and`/`or`/`not`.
