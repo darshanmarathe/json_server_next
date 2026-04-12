@@ -1,4 +1,3 @@
-const _ = require("lodash");
 const { getPaginatedItems } = require("./pager");
 
 const CONTROL_QUERY_KEYS = new Set([
@@ -12,6 +11,16 @@ const CONTROL_QUERY_KEYS = new Set([
 ]);
 
 const deepClone = (value) => JSON.parse(JSON.stringify(value));
+
+const getByPath = (obj, path) => {
+  if (!path || typeof path !== "string") return obj;
+  return path
+    .split(".")
+    .reduce(
+      (acc, key) => (acc === null || acc === undefined ? undefined : acc[key]),
+      obj
+    );
+};
 
 const parseValue = (value) => {
   if (Array.isArray(value)) return value.map(parseValue);
@@ -141,7 +150,7 @@ const matchesObjectCondition = (item, condition) => {
     const field = condition.field;
     const op = condition.op || "eq";
     const value = condition.value;
-    return applyOperator(_.get(item, field), op, value);
+    return applyOperator(getByPath(item, field), op, value);
   }
 
   if ("and" in condition) {
@@ -162,7 +171,7 @@ const matchesObjectCondition = (item, condition) => {
 
   for (const key of keys) {
     const { field, op } = parseFieldAndOp(key);
-    const actual = _.get(item, field);
+    const actual = getByPath(item, field);
     const expected = condition[key];
 
     if (
@@ -211,7 +220,7 @@ const applyFieldFilters = (items, query) => {
     const { field, op } = parseFieldAndOp(key);
     const expected = parseValue(query[key]);
     result = result.filter((item) => {
-      const actual = _.get(item, field);
+      const actual = getByPath(item, field);
       return applyOperator(actual, op, expected);
     });
   }
@@ -232,7 +241,7 @@ const applySort = (items, sortValue) => {
     for (const descriptor of fields) {
       const desc = descriptor.startsWith("-");
       const field = desc ? descriptor.slice(1) : descriptor;
-      const cmp = compareValues(_.get(a, field), _.get(b, field));
+      const cmp = compareValues(getByPath(a, field), getByPath(b, field));
       if (cmp !== 0) return desc ? -cmp : cmp;
     }
     return 0;

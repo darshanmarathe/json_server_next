@@ -1,4 +1,3 @@
-const _ = require("lodash")
 function getPaginatedItems(items, {
     _page,
     _pageSize,
@@ -9,7 +8,7 @@ function getPaginatedItems(items, {
     var pg = Number.isFinite(page) && page > 0 ? page : 1,
         pgSize = Number.isFinite(pageSize) && pageSize > 0 ? pageSize : items.length,
         offset = (pg - 1) * pgSize,
-        pagedItems = _.drop(items, offset).slice(0, pgSize);
+        pagedItems = items.slice(offset, offset + pgSize);
     return pagedItems;
 }
 
