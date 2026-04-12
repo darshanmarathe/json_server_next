@@ -25,8 +25,19 @@ http://localhost:3000/rest/users/ // body as json
 Put
 http://localhost:3000/rest/users/1 // body as json
 
+Patch
+http://localhost:3000/rest/users/1 // body as partial json
+
 Delete
 http://localhost:3000/rest/users/1
+
+Advanced GET Query Examples (replace `posts` with your collection)
+http://localhost:3000/rest/posts/?views:gt=100
+http://localhost:3000/rest/posts/?_sort=-views
+http://localhost:3000/rest/posts/?_page=1&_per_page=10
+http://localhost:3000/rest/posts/?_embed=comments
+http://localhost:3000/rest/posts/?_where={"or":[{"views:gt":100},{"title:contains":"API"}]}
+Note: For `postgres`, `sql`, and `mongo` providers, filter/sort/pagination/_where are translated to DB queries when supported; unsupported parts fall back to in-memory processing.
 
 ## DataStore
 
@@ -43,6 +54,8 @@ http://localhost:3000/rest/users/1
         - ENV: CONNECTION_STRING  (default :'postgresql://localhost:5432');
     - sql server 
         - ENV: CONNECTION_STRING  (default :'');
+    - sqlite
+        - ENV: SQLITE_PATH (default : './data/sqlite.db')
 
 
 ## Features

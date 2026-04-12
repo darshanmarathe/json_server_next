@@ -1,4 +1,5 @@
 const { getPaginatedItems } = require("../common/index");
+const { buildSqlPushdown } = require("../common/queryPushdown");
 
 const url =
   process.env.CONNECTION_STRING ||
@@ -55,16 +56,57 @@ const GetData = async ({ type }, query) => {
   return new Promise((res, rej) => {
     sql.query(`SELECT * FROM ${_tableName}`).then((results) => {
       console.log(results);
-      let unpaged = results.recordset.map((x) => {
-        console.log(x)
-        return {
-          ...JSON.parse(x.document),
-          _id: x._Id || x._id,
-        };
-      });
+      let unpaged = results.recordset.map(parseDocumentRow);
       res(getPaginatedItems(unpaged, query));
     });
   });
+};
+
+const parseDocumentRow = (row) => {
+  let document = row.document;
+  if (typeof document === "string") {
+    try {
+      document = JSON.parse(document);
+    } catch {
+      document = {};
+    }
+  }
+  document = document || {};
+  return {
+    ...document,
+    _id: row._Id || row._id,
+  };
+};
+
+const GetDataWithQuery = async ({ type }, query) => {
+  await initDb(type);
+  const _tableName = getTableName(type);
+  const plan = buildSqlPushdown(query, { dialect: "sqlserver" });
+
+  let queryText = `SELECT * FROM ${_tableName}`;
+  if (plan.where) {
+    queryText += ` WHERE ${plan.where}`;
+  }
+
+  let orderByClause = plan.orderBy;
+  if (!orderByClause && plan.limit !== null && plan.limit !== undefined) {
+    orderByClause = `_id ASC`;
+  }
+  if (orderByClause) {
+    queryText += ` ORDER BY ${orderByClause}`;
+  }
+
+  if (plan.limit !== null && plan.limit !== undefined) {
+    const offset = parseInt(plan.offset || 0, 10);
+    const limit = parseInt(plan.limit, 10);
+    queryText += ` OFFSET ${offset} ROWS FETCH NEXT ${limit} ROWS ONLY`;
+  }
+
+  const results = await sql.query(queryText);
+  return {
+    items: results.recordset.map(parseDocumentRow),
+    residualQuery: plan.residualQuery,
+  };
 };
 
 const GetDataById = ({ type, id }) => {
@@ -149,6 +191,7 @@ const Delete = (type, id) => {
 module.exports = {
   Init,
   GetData,
+  GetDataWithQuery,
   GetDataById,
   CollectionList,
   Create,

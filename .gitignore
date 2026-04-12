@@ -8,6 +8,8 @@ lerna-debug.log*
 
 data/*
 admin_data/*
+.idea/*
+
 
 !data
 !admin_data
@@ -120,3 +122,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+resumeAi.bat

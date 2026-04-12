@@ -77,6 +77,23 @@ const PUT = async (req, res, next) => {
         res.send(response.data);
     }
 };
+const PATCH = async (req, res, next) => {
+    const data = GetData(req);
+    const { "rev-proxy": RevProxy } = data;
+    if (RevProxy !== true) {
+        next();
+        return;
+    }
+
+    let { PATCH } = data.proxies;
+    if (validUrl(PATCH)) {
+        PATCH = fixURL(PATCH, req.params.id);
+        const response = await axios.patch(PATCH, req.body);
+        res.send(response.data);
+        return;
+    }
+    next();
+};
 const DELETE = async (req, res, next) => {
     const data = GetData(req);
     const { "rev-proxy": RevProxy } = data;
@@ -98,5 +115,6 @@ module.exports = {
     GETBYID,
     POST,
     PUT,
+    PATCH,
     DELETE,
 };

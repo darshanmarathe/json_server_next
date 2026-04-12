@@ -28,6 +28,16 @@ const PUT = function (req, res, next) {
   next();
 };
 
+const PATCH = function (req, res, next) {
+  const io = req.app.get("socketio");
+  const [data, type] = GetData(req);
+  const { realtime } = data;
+
+  if (data == null && realtime != false) next();
+  io.emit("UPDATE" , {type , ACTION : "PATCH", ...req.body})
+  next();
+};
+
 const DELETE = function (req, res, next) {
   const io = req.app.get("socketio");
   const [data, type] = GetData(req);
@@ -43,5 +53,6 @@ const DELETE = function (req, res, next) {
 module.exports = {
   POST,
   PUT,
+  PATCH,
   DELETE,
 };

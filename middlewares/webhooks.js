@@ -7,6 +7,7 @@ function GetData(req){
     return req[type + "_data"]
 }
 
+
 const validUrl = (URL) => (URL && URL.trim() !== '' && URL.startsWith('http'))
 
 const fixURL = (URL , id) => URL.indexOf(':id') > -1 ? URL.replace(/:id/g, id) : URL+ "/" + id;
@@ -38,6 +39,21 @@ async function PUT(req, res,next) {
     next();
 }
 
+async function PATCH(req, res,next) {
+    const data = GetData(req);
+    if(data == null) {
+        next();
+        return;
+    }
+    const id = req.params.id;
+    let {PATCH}  = data.webhooks;
+    PATCH = fixURL(PATCH, id);
+    if(validUrl(PATCH)) {
+        axios.patch(PATCH, res.Body).catch(function (error) {console.log(error);});
+    }
+    next();
+}
+
 
 async function DELETE(req, res,next) {
     console.log("WebHook POST CALLED");
@@ -57,5 +73,6 @@ async function DELETE(req, res,next) {
 module.exports =  {
     POST,
     PUT,
+    PATCH,
     DELETE
 }

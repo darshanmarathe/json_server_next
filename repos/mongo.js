@@ -1,5 +1,6 @@
 const fs = require("fs");
 const pager = require('../common/pager');
+const { buildMongoPushdown } = require("../common/queryPushdown");
 
 const {
     MongoClient
@@ -36,6 +37,27 @@ const GetData = async ({
     console.log(items)
     const result = pager.getPaginatedItems(items, query);
     return result;
+}
+const GetDataWithQuery = async ({ type }, query) => {
+    initDb(type)
+    const plan = buildMongoPushdown(query);
+
+    let cursor = collection.find(plan.filter || {});
+    if (plan.sort && Object.keys(plan.sort).length > 0) {
+        cursor = cursor.sort(plan.sort);
+    }
+    if (plan.offset !== null && plan.offset !== undefined) {
+        cursor = cursor.skip(parseInt(plan.offset, 10));
+    }
+    if (plan.limit !== null && plan.limit !== undefined) {
+        cursor = cursor.limit(parseInt(plan.limit, 10));
+    }
+
+    const items = await cursor.toArray();
+    return {
+        items,
+        residualQuery: plan.residualQuery,
+    };
 }
 const GetDataById = async ({
     type,
@@ -90,6 +112,7 @@ const Delete = (type, id) => {
 module.exports = {
     Init,
     GetData,
+    GetDataWithQuery,
     GetDataById,
     CollectionList,
     Create,
