@@ -1,6 +1,6 @@
 const repo = function () {
     let provider = 'filesys';
-    const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql'];
+    const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql', 'sqlite'];
     if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
     return require(`../repos/${provider}`);
   }();

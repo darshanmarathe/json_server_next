@@ -24,7 +24,7 @@ const AdminCtrol = require('./Controllers/Admin/Crud');
 _cache.Init();
 
 const repo = function () {
-  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql'];
+  const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql', 'sqlite'];
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   return require(`./repos/${provider}`);
 }();

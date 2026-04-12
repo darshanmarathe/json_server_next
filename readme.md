@@ -54,6 +54,8 @@ Note: For `postgres`, `sql`, and `mongo` providers, filter/sort/pagination/_wher
         - ENV: CONNECTION_STRING  (default :'postgresql://localhost:5432');
     - sql server 
         - ENV: CONNECTION_STRING  (default :'');
+    - sqlite
+        - ENV: SQLITE_PATH (default : './data/sqlite.db')
 
 
 ## Features

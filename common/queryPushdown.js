@@ -102,9 +102,9 @@ const escapeLiteral = (value) => {
 
 const getFieldExpr = (dialect, fieldName) => {
   if (fieldName === "_id" || fieldName === "id") {
-    return dialect === "postgres"
-      ? "_id::text"
-      : "CAST(_id AS NVARCHAR(200))";
+    if (dialect === "postgres") return "_id::text";
+    if (dialect === "sqlite") return "CAST(_id AS TEXT)";
+    return "CAST(_id AS NVARCHAR(200))";
   }
 
   if (!FIELD_RE.test(fieldName)) return null;
@@ -117,6 +117,11 @@ const getFieldExpr = (dialect, fieldName) => {
     return `document #>> '{${parts.join(",")}}'`;
   }
 
+  if (dialect === "sqlite") {
+    const jsonPath = "$." + parts.join(".");
+    return `json_extract(document, '${jsonPath}')`;
+  }
+
   const jsonPath = "$." + parts.join(".");
   return `JSON_VALUE(document, '${jsonPath}')`;
 };
@@ -124,6 +129,14 @@ const getFieldExpr = (dialect, fieldName) => {
 const getNumericExpr = (dialect, fieldExpr) => {
   if (dialect === "postgres") {
     return `CASE WHEN ${fieldExpr} ~ '^-?[0-9]+(\\.[0-9]+)?$' THEN (${fieldExpr})::numeric END`;
+  }
+  if (dialect === "sqlite") {
+    return `CASE
+      WHEN ${fieldExpr} GLOB '-[0-9]*' THEN CAST(${fieldExpr} AS REAL)
+      WHEN ${fieldExpr} GLOB '[0-9]*' THEN CAST(${fieldExpr} AS REAL)
+      WHEN ${fieldExpr} GLOB '-[0-9]*.[0-9]*' THEN CAST(${fieldExpr} AS REAL)
+      WHEN ${fieldExpr} GLOB '[0-9]*.[0-9]*' THEN CAST(${fieldExpr} AS REAL)
+    END`;
   }
   return `TRY_CAST(${fieldExpr} AS FLOAT)`;
 };

@@ -7,6 +7,7 @@ function GetData(req){
     return req[type + "_data"]
 }
 
+
 const validUrl = (URL) => (URL && URL.trim() !== '' && URL.startsWith('http'))
 
 const fixURL = (URL , id) => URL.indexOf(':id') > -1 ? URL.replace(/:id/g, id) : URL+ "/" + id;
