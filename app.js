@@ -2,11 +2,12 @@
 const log = console.log;
 const fs = require("fs");
 const express = require("express");
+const { traceAny } = require("./common/functionTrace");
 
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const middlewares = require('./middlewares/index');
+const middlewares = traceAny(require("./middlewares/index"), "middlewares");
 
 console.clear();
 
@@ -18,22 +19,36 @@ var methodOverride = require('method-override');
 var provider = (process.env.PROVIDER || 'filesys').toLowerCase();
 log(`Provider selected: ${provider}`)
 
-const _cache = require('./common/Cache.js');
-const AdminCtrol = require('./Controllers/Admin/Crud');
+const _cache = traceAny(require("./common/Cache.js"), "cache");
+const AdminCtrol = traceAny(require("./Controllers/Admin/Crud"), "adminCtrl");
 
 _cache.Init();
 
-const repo = function () {
+const repo = traceAny(function () {
   const reposAvaible = ['nedb', 'filesys', 'mongo', 'redis', 'postgres', 'sql', 'sqlite'];
   if (reposAvaible.indexOf(provider) === -1) provider = 'filesys';
   return require(`./repos/${provider}`);
-}();
+}(), `repo:${provider}`);
 
-const ctrl = function () {
+const ctrl = traceAny(function () {
   const exist = fs.existsSync(`./Controllers/${provider}Ctrl.js`);
   if (!exist) return require(`./Controllers/mainCtrl.js`);
   return require(`./Controllers/${provider}Ctrl.js`);
-}();
+}(), `ctrl:${provider}`);
+
+process.on("uncaughtException", (error) => {
+  console.error("[TRACE][FATAL] uncaughtException");
+  console.error(error && error.stack ? error.stack : error);
+  console.error("[TRACE][FATAL][CALLSTACK]");
+  console.error(new Error().stack);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[TRACE][FATAL] unhandledRejection");
+  console.error(reason && reason.stack ? reason.stack : reason);
+  console.error("[TRACE][FATAL][CALLSTACK]");
+  console.error(new Error().stack);
+});
 
 if (!repo.Init()) {
   log('repo init failed')
@@ -46,6 +61,10 @@ AdminCtrol.Init(repo);
 
 
 function errorHandler(err, req, res, next) {
+  console.error("[TRACE][EXPRESS][ERROR]");
+  console.error(err && err.stack ? err.stack : err);
+  console.error("[TRACE][EXPRESS][CALLSTACK]");
+  console.error(new Error().stack);
   if (res.headersSent) {
     console.log(err)
     return next(err)

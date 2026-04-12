@@ -10,6 +10,7 @@
 
 # ChangeLog
 
+- 2026-04-12: Added heavy runtime function tracing (`TRACE` logs) with auto-wrapping of controllers/repos/middlewares/cache/admin methods, ENTER/EXIT timing logs, summarized args, Express error stack logging, and process-level `uncaughtException`/`unhandledRejection` call stack output.
 - 2026-04-12: Replaced underscore-style utility usage in query/paging code with native JS helpers (`getByPath`, `Array.slice`) and removed direct `lodash` dependency from project manifests.
 - 2026-04-12: Improved Docker packaging with lean production dependency install (`npm ci --omit=dev`), corrected container port to `4000`, non-root writable `data/admin_data` setup, healthcheck, persistent volumes, and new `.dockerignore` to reduce build context.
 - 2026-04-12: Fixed SQLite `Create`/`Update` body handling so missing or invalid bodies no longer crash, `Create` now always persists with generated GUID `_id` and auto `_createdOn`, and `Update` safely normalizes input with `_updatedOn`.
